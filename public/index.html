@@ -1,2256 +1,744 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SWITCH特賣報 — 台灣 eShop 遊戲特價誌</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Noto+Sans+TC:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-    :root {
-        --ink: #111010;
-        --ink2: #2c2a2a;
-        --ink3: #5a5656;
-        --ink4: #9a9494;
-        --paper: #faf8f3;
-        --paper2: #f2efe8;
-        --paper3: #e8e4da;
-        --red: #c0392b;
-        --red2: #e74c3c;
-        --gold: #b8860b;
-        --gold2: #d4a017;
-        --green: #1a7a4a;
-        --border: rgba(0, 0, 0, 0.12);
-        --border2: rgba(0, 0, 0, 0.22);
-        --serif: 'Playfair Display', Georgia, serif;
-        --sans: 'Noto Sans TC', sans-serif;
-        --mono: 'DM Mono', monospace;
-    }
-
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    html {
-        scroll-behavior: smooth;
-    }
-
-    body {
-        font-family: var(--sans);
-        background: var(--paper);
-        color: var(--ink);
-        font-size: 15px;
-        line-height: 1.65;
-    }/* MASTHEAD */
-    .masthead {
-        border-bottom: 3px double var(--ink);
-        padding: .75rem 2rem 0;
-        background: var(--paper);
-        position: sticky;
-        top: 0;
-        z-index: 200;
-    }
-
-    .masthead-top {
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        padding-bottom: .5rem;
-        border-bottom: 1px solid var(--border);
-    }
-
-    .pub-name {
-        font-family: var(--serif);
-        font-size: 2.8rem;
-        font-weight: 900;
-        letter-spacing: -2px;
-        line-height: 1;
-        color: var(--ink);
-        text-transform: uppercase;
-    }
-
-    .pub-name sup {
-        font-size: .9rem;
-        font-weight: 700;
-        letter-spacing: 1px;
-        color: var(--red);
-        vertical-align: super;
-        font-family: var(--sans);
-    }
-
-    .pub-meta {
-        text-align: right;
-        font-family: var(--mono);
-        font-size: 11px;
-        color: var(--ink3);
-        line-height: 1.6;
-    }
-
-    .masthead-nav {
-        display: flex;
-        align-items: center;
-        gap: 0;
-        padding: 4px 0 0;
-        overflow-x: auto;
-        scrollbar-width: none;
-    }
-
-    .masthead-nav::-webkit-scrollbar {
-        display: none;
-    }
-
-    .nav-item {
-        font-family: var(--sans);
-        font-size: 12px;
-        font-weight: 500;
-        letter-spacing: .5px;
-        text-transform: uppercase;
-        color: var(--ink2);
-        padding: 6px 16px;
-        cursor: pointer;
-        white-space: nowrap;
-        border: none;
-        background: none;
-        border-right: 1px solid var(--border);
-        transition: all .15s;
-    }
-
-    .nav-item:first-child {
-        padding-left: 0;
-    }
-
-    .nav-item:hover, .nav-item.active {
-        color: var(--red);
-    }
-
-    .nav-item.active {
-        font-weight: 700;
-    }
-
-    .nav-right {
-        margin-left: auto;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .search-wrap {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        border: 1px solid var(--border2);
-        border-radius: 2px;
-        padding: 4px 10px;
-        background: white;
-    }
-
-    .search-wrap input {
-        font-family: var(--sans);
-        font-size: 12px;
-        border: none;
-        outline: none;
-        background: none;
-        color: var(--ink);
-        width: 140px;
-    }
-
-    .search-wrap input::placeholder {
-        color: var(--ink4);
-    }/* BANNER */
-    .issue-banner {
-        background: var(--ink);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 1.5rem;
-        padding: 10px 2rem;
-        font-family: var(--mono);
-        font-size: 11px;
-        letter-spacing: .5px;
-        flex-wrap: wrap;
-    }
-
-    .issue-banner .sep {
-        color: rgba(255, 255, 255, .3);
-    }
-
-    .live-dot {
-        display: inline-block;
-        width: 7px;
-        height: 7px;
-        background: #2ecc71;
-        border-radius: 50%;
-        animation: blink 1.5s infinite;
-    }
-
-    @keyframes blink {
-        0%, 100% {
-            opacity: 1;
-        }
-
-        50% {
-            opacity: .2;
-        }
-    }
-
-    .stat-inline {
-        color: var(--gold2);
-        font-weight: 500;
-    }
-
-    .api-status {
-        font-family: var(--mono);
-        font-size: 11px;
-        padding: 3px 8px;
-        border-radius: 2px;
-    }
-
-    .api-status.live {
-        background: #d4edda;
-        color: var(--green);
-    }
-
-    .api-status.demo {
-        background: #fff3cd;
-        color: var(--gold);
-    }/* PAGE */
-    .page-wrap {
-        max-width: 1380px;
-        margin: 0 auto;
-        padding: 0 2rem;
-    }
-
-    .api-note {
-        background: var(--paper2);
-        border: 1px solid var(--border);
-        border-left: 3px solid var(--gold2);
-        padding: 10px 14px;
-        font-family: var(--mono);
-        font-size: 11px;
-        color: var(--ink3);
-        margin-bottom: 1.5rem;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
-        margin-top: 1rem;
-    }/* HERO */
-    .hero-section {
-        padding: 2.5rem 0 2rem;
-        border-bottom: 2px solid var(--ink);
-    }
-
-    .hero-label {
-        font-family: var(--mono);
-        font-size: 10px;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        color: var(--red);
-        margin-bottom: 1rem;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .hero-label::after {
-        content: '';
-        flex: 1;
-        height: 1px;
-        background: var(--border2);
-    }
-
-    .hero-grid {
-        display: grid;
-        grid-template-columns: 1fr 320px;
-        gap: 2px;
-    }
-
-    .hero-main {
-        grid-row: 1/3;
-        position: relative;
-        cursor: pointer;
-        overflow: hidden;
-        background: var(--ink);
-        min-height: 380px;
-    }
-
-    .hero-main:hover .hero-img {
-        transform: scale(1.03);
-    }
-
-    .hero-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        transition: transform .4s ease;
-        opacity: .85;
-        position: absolute;
-        inset: 0;
-    }
-
-    .hero-fallback {
-        width: 100%;
-        min-height: 380px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-    }
-
-    .hero-fallback-emoji {
-        font-size: 6rem;
-    }
-
-    .hero-fallback-name {
-        font-family: var(--serif);
-        font-size: 1.2rem;
-        color: rgba(255, 255, 255, .4);
-        font-style: italic;
-    }
-
-    .hero-overlay {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: linear-gradient(transparent, rgba(0, 0, 0, .92) 55%);
-        padding: 2.5rem 1.5rem 1.5rem;
-        color: white;
-        z-index: 2;
-    }
-
-    .hero-genre-tag {
-        display: inline-block;
-        background: var(--red);
-        color: white;
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
-        padding: 3px 8px;
-        margin-bottom: .5rem;
-    }
-
-    .hero-title {
-        font-family: var(--serif);
-        font-size: 2.2rem;
-        font-weight: 900;
-        line-height: 1.1;
-        margin-bottom: .5rem;
-        letter-spacing: -.5px;
-    }
-
-    .hero-subtitle {
-        font-size: 13px;
-        color: rgba(255, 255, 255, .75);
-        margin-bottom: 1rem;
-    }
-
-    .hero-price-row {
-        display: flex;
-        align-items: baseline;
-        gap: 12px;
-        flex-wrap: wrap;
-    }
-
-    .hero-sale-price {
-        font-family: var(--serif);
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: #2ecc71;
-    }
-
-    .hero-orig-price {
-        font-size: 14px;
-        color: rgba(255, 255, 255, .5);
-        text-decoration: line-through;
-    }
-
-    .hero-discount {
-        background: var(--red2);
-        color: white;
-        font-size: 13px;
-        font-weight: 700;
-        padding: 3px 10px;
-        border-radius: 2px;
-    }
-
-    .hero-atl {
-        background: var(--gold);
-        color: white;
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        padding: 3px 8px;
-    }
-
-    .hero-side {
-        border-left: 1px solid var(--border2);
-        display: flex;
-        flex-direction: column;
-    }
-
-    .hero-side-item {
-        flex: 1;
-        padding: 1rem 1.25rem;
-        border-bottom: 1px solid var(--border);
-        cursor: pointer;
-        transition: background .15s;
-        position: relative;
-        overflow: hidden;
-        display: grid;
-        grid-template-columns: 56px 1fr;
-        gap: 10px;
-        align-items: center;
-    }
-
-    .hero-side-item:last-child {
-        border-bottom: none;
-    }
-
-    .hero-side-item:hover {
-        background: var(--paper2);
-    }
-
-    .side-thumb {
-        width: 56px;
-        height: 34px;
-        object-fit: cover;
-        display: block;
-        background: var(--ink2);
-    }
-
-    .side-thumb-fallback {
-        width: 56px;
-        height: 34px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-    }
-
-    .side-info {
-    }
-
-    .side-rank {
-        font-family: var(--mono);
-        font-size: 11px;
-        color: var(--ink4);
-    }
-
-    .side-genre {
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
-        color: var(--red);
-    }
-
-    .side-title {
-        font-family: var(--serif);
-        font-size: .95rem;
-        font-weight: 700;
-        line-height: 1.2;
-        margin-bottom: 4px;
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-
-    .side-price {
-        font-size: 13px;
-        color: var(--green);
-        font-weight: 700;
-    }
-
-    .side-orig {
-        color: var(--ink4);
-        text-decoration: line-through;
-        font-size: 12px;
-    }/* SECTION */
-    .section-head {
-        display: grid;
-        grid-template-columns: auto 1fr auto;
-        align-items: center;
-        gap: 1rem;
-        padding: 1.5rem 0 1rem;
-    }
-
-    .section-head-title {
-        font-family: var(--serif);
-        font-size: 1.4rem;
-        font-weight: 700;
-        font-style: italic;
-    }
-
-    .section-head-line {
-        height: 1px;
-        background: var(--border2);
-    }
-
-    .section-head-count {
-        font-family: var(--mono);
-        font-size: 11px;
-        color: var(--ink3);
-    }/* FILTER */
-    .filter-bar {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 1.5rem;
-        flex-wrap: wrap;
-        border-bottom: 1px solid var(--border);
-        padding-bottom: 1rem;
-    }
-
-    .filter-label {
-        font-family: var(--mono);
-        font-size: 11px;
-        color: var(--ink3);
-        letter-spacing: .5px;
-    }
-
-    .filter-chip {
-        font-size: 12px;
-        font-weight: 500;
-        border: 1px solid var(--border2);
-        background: white;
-        color: var(--ink2);
-        padding: 5px 12px;
-        cursor: pointer;
-        border-radius: 2px;
-        transition: all .15s;
-        font-family: var(--sans);
-    }
-
-    .filter-chip:hover {
-        background: var(--paper2);
-    }
-
-    .filter-chip.active {
-        background: var(--ink);
-        color: white;
-        border-color: var(--ink);
-    }
-
-    .filter-chip.rogue-chip.active {
-        background: var(--red);
-        border-color: var(--red);
-    }
-
-    .sort-select {
-        margin-left: auto;
-        font-family: var(--mono);
-        font-size: 11px;
-        border: 1px solid var(--border2);
-        padding: 5px 10px;
-        background: white;
-        color: var(--ink);
-        cursor: pointer;
-        appearance: none;
-        outline: none;
-    }/* CARDS */
-    .cards-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 0;
-        border-top: 1px solid var(--border);
-        border-left: 1px solid var(--border);
-    }
-
-    .game-card {
-        border-right: 1px solid var(--border);
-        border-bottom: 1px solid var(--border);
-        cursor: pointer;
-        transition: background .15s;
-        position: relative;
-        background: var(--paper);
-    }
-
-    .game-card:hover {
-        background: var(--paper2);
-    }/* Card image with gradient fallback */
-    .card-img-wrap {
-        width: 100%;
-        aspect-ratio: 16/9;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .card-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        transition: transform .3s;
-    }
-
-    .game-card:hover .card-img {
-        transform: scale(1.04);
-    }
-
-    .card-img-fallback {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        position: absolute;
-        inset: 0;
-    }
-
-    .card-fallback-emoji {
-        font-size: 2.5rem;
-        line-height: 1;
-    }
-
-    .card-fallback-genre {
-        font-family: var(--mono);
-        font-size: 9px;
-        color: rgba(255, 255, 255, .45);
-        letter-spacing: 1px;
-        text-transform: uppercase;
-    }
-
-    .card-discount-flag {
-        position: absolute;
-        top: 0;
-        left: 0;
-        background: var(--red);
-        color: white;
-        font-family: var(--mono);
-        font-size: 13px;
-        font-weight: 500;
-        padding: 4px 10px;
-        line-height: 1;
-        z-index: 3;
-    }
-
-    .card-atl-flag {
-        position: absolute;
-        top: 0;
-        right: 0;
-        background: var(--gold);
-        color: white;
-        font-size: 9px;
-        font-weight: 700;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        padding: 4px 7px;
-        line-height: 1;
-        z-index: 3;
-    }
-
-    .card-rogue-flag {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        background: rgba(17, 0, 17, .85);
-        color: #e88;
-        font-size: 9px;
-        font-weight: 700;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        padding: 3px 7px;
-        border-top: 1px solid #e88;
-        border-right: 1px solid #e88;
-        z-index: 3;
-    }
-
-    .card-rank-num {
-        position: absolute;
-        top: 8px;
-        left: 42px;
-        font-family: var(--serif);
-        font-size: 11px;
-        font-style: italic;
-        color: rgba(255, 255, 255, .9);
-        background: rgba(0, 0, 0, .5);
-        padding: 2px 6px;
-        z-index: 3;
-    }
-
-    .card-body {
-        padding: 10px 12px 12px;
-    }
-
-    .card-category {
-        font-family: var(--mono);
-        font-size: 9px;
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
-        color: var(--red);
-        margin-bottom: 4px;
-    }
-
-    .card-title {
-        font-family: var(--serif);
-        font-size: .95rem;
-        font-weight: 700;
-        line-height: 1.25;
-        color: var(--ink);
-        margin-bottom: 8px;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-
-    .card-price-line {
-        display: flex;
-        align-items: baseline;
-        gap: 8px;
-        margin-bottom: 4px;
-    }
-
-    .card-sale {
-        font-size: 1.05rem;
-        font-weight: 700;
-        color: var(--green);
-    }
-
-    .card-orig {
-        font-size: 12px;
-        color: var(--ink4);
-        text-decoration: line-through;
-    }
-
-    .card-expire {
-        font-family: var(--mono);
-        font-size: 10px;
-        color: var(--ink4);
-    }
-
-    .card-expire.urgent {
-        color: var(--red2);
-    }/* ROGUELIKE */
-    .rogue-section {
-        margin-top: 2rem;
-        background: var(--ink);
-        color: white;
-        padding: 2rem;
-    }
-
-    .rogue-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 1.5rem;
-        border-bottom: 1px solid rgba(255, 255, 255, .15);
-        padding-bottom: 1rem;
-    }
-
-    .rogue-title {
-        font-family: var(--serif);
-        font-size: 1.8rem;
-        font-weight: 900;
-        font-style: italic;
-        letter-spacing: -.5px;
-    }
-
-    .rogue-title span {
-        color: #e88;
-    }
-
-    .rogue-desc {
-        font-size: 12px;
-        color: rgba(255, 255, 255, .5);
-        font-family: var(--mono);
-    }
-
-    .rogue-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-        gap: 1px;
-        background: rgba(255, 255, 255, .1);
-    }
-
-    .rogue-card {
-        background: var(--ink);
-        padding: 0;
-        cursor: pointer;
-        transition: background .15s;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .rogue-card:hover {
-        background: var(--ink2);
-    }
-
-    .rogue-card-img-wrap {
-        width: 100%;
-        aspect-ratio: 16/9;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .rogue-card-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        transition: transform .3s;
-    }
-
-    .rogue-card:hover .rogue-card-img {
-        transform: scale(1.04);
-    }
-
-    .rogue-card-fallback {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2.5rem;
-        position: absolute;
-        inset: 0;
-    }
-
-    .rogue-card-body {
-        padding: 10px 12px 12px;
-    }
-
-    .rogue-num {
-        font-family: var(--serif);
-        font-size: 1.8rem;
-        font-weight: 900;
-        color: rgba(255, 255, 255, .07);
-        position: absolute;
-        top: 6px;
-        right: 10px;
-        line-height: 1;
-        z-index: 2;
-    }
-
-    .rogue-card-category {
-        font-family: var(--mono);
-        font-size: 9px;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        color: #e88;
-        margin-bottom: 4px;
-    }
-
-    .rogue-card-title {
-        font-family: var(--serif);
-        font-size: .95rem;
-        font-weight: 700;
-        color: white;
-        line-height: 1.25;
-        margin-bottom: 8px;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-
-    .rogue-price {
-        color: #5ef8a0;
-        font-size: 1rem;
-        font-weight: 700;
-    }
-
-    .rogue-orig {
-        color: rgba(255, 255, 255, .35);
-        text-decoration: line-through;
-        font-size: 12px;
-    }/* MODAL */
-    .modal-wrap {
-        display: none;
-        position: fixed;
-        inset: 0;
-        z-index: 500;
-        background: rgba(0, 0, 0, .78);
-        overflow-y: auto;
-    }
-
-    .modal-wrap.open {
-        display: block;
-    }
-
-    .modal {
-        background: var(--paper);
-        max-width: 820px;
-        margin: 3rem auto;
-        border: 2px solid var(--ink);
-        box-shadow: 8px 8px 0 var(--ink);
-    }
-
-    .modal-img-wrap {
-        width: 100%;
-        aspect-ratio: 16/9;
-        position: relative;
-        overflow: hidden;
-        background: var(--ink);
-    }
-
-    .modal-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-    }
-
-    .modal-img-fallback {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        font-size: 6rem;
-        position: absolute;
-        inset: 0;
-    }
-
-    .modal-close {
-        position: fixed;
-        top: 1rem;
-        right: 1rem;
-        width: 40px;
-        height: 40px;
-        background: var(--ink);
-        color: white;
-        border: none;
-        font-size: 20px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 10;
-    }
-
-    .modal-close:hover {
-        background: var(--red);
-    }
-
-    .modal-body {
-        padding: 2rem;
-    }
-
-    .modal-kicker {
-        font-family: var(--mono);
-        font-size: 10px;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        color: var(--red);
-        margin-bottom: .5rem;
-    }
-
-    .modal-title {
-        font-family: var(--serif);
-        font-size: 2.5rem;
-        font-weight: 900;
-        line-height: 1.05;
-        letter-spacing: -1px;
-        margin-bottom: 1rem;
-    }
-
-    .modal-tags {
-        display: flex;
-        gap: 6px;
-        flex-wrap: wrap;
-        margin-bottom: 1.5rem;
-    }
-
-    .modal-tag {
-        font-size: 11px;
-        letter-spacing: .5px;
-        text-transform: uppercase;
-        border: 1px solid var(--border2);
-        padding: 3px 10px;
-        font-family: var(--sans);
-        font-weight: 500;
-    }
-
-    .modal-tag.rogue {
-        background: var(--ink);
-        color: #e88;
-        border-color: #e88;
-    }
-
-    .modal-tag.atl {
-        background: var(--gold);
-        color: white;
-        border: none;
-    }
-
-    .price-editorial {
-        display: grid;
-        grid-template-columns: 1fr 1px 1fr;
-        border: 2px solid var(--ink);
-        margin-bottom: 1.5rem;
-    }
-
-    .price-col {
-        padding: 1.25rem 1.5rem;
-    }
-
-    .price-divider {
-        background: var(--ink);
-    }
-
-    .price-label {
-        font-family: var(--mono);
-        font-size: 10px;
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
-        color: var(--ink3);
-        margin-bottom: .25rem;
-    }
-
-    .price-big {
-        font-family: var(--serif);
-        font-size: 2.2rem;
-        font-weight: 700;
-        line-height: 1;
-        color: var(--green);
-    }
-
-    .price-orig-big {
-        font-size: 1.1rem;
-        color: var(--ink4);
-        text-decoration: line-through;
-        font-family: var(--serif);
-    }
-
-    .price-discount-big {
-        font-family: var(--serif);
-        font-size: 2.2rem;
-        font-weight: 700;
-        color: var(--red);
-        line-height: 1;
-    }
-
-    .price-save {
-        font-size: 12px;
-        color: var(--green);
-        margin-top: 4px;
-    }
-
-    .eshop-link-btn {
-        display: inline-block;
-        background: var(--ink);
-        color: white;
-        padding: 12px 28px;
-        font-family: var(--serif);
-        font-size: 1rem;
-        font-weight: 700;
-        font-style: italic;
-        border: 2px solid var(--ink);
-        cursor: pointer;
-        text-decoration: none;
-        transition: all .15s;
-        letter-spacing: .5px;
-    }
-
-    .eshop-link-btn:hover {
-        background: var(--red);
-        border-color: var(--red);
-    }
-
-    .modal-tabs {
-        display: flex;
-        border-bottom: 2px solid var(--ink);
-        margin-bottom: 1.5rem;
-    }
-
-    .mtab {
-        font-family: var(--mono);
-        font-size: 11px;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        padding: 8px 16px;
-        cursor: pointer;
-        border: none;
-        background: none;
-        color: var(--ink3);
-        border-bottom: 2px solid transparent;
-        margin-bottom: -2px;
-    }
-
-    .mtab.active {
-        color: var(--ink);
-        border-bottom-color: var(--ink);
-        font-weight: 700;
-    }
-
-    .tab-panel {
-        display: none;
-    }
-
-    .tab-panel.active {
-        display: block;
-    }
-
-    .ph-row {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 10px;
-    }
-
-    .ph-mo {
-        font-family: var(--mono);
-        font-size: 11px;
-        color: var(--ink3);
-        width: 40px;
-        flex-shrink: 0;
-    }
-
-    .ph-bar-bg {
-        flex: 1;
-        height: 10px;
-        background: var(--paper3);
-        border: 1px solid var(--border);
-    }
-
-    .ph-bar-fill {
-        height: 100%;
-        background: var(--ink3);
-        transition: width .5s ease;
-    }
-
-    .ph-bar-fill.current {
-        background: var(--green);
-    }
-
-    .ph-bar-fill.low {
-        background: var(--gold2);
-    }
-
-    .ph-val {
-        font-family: var(--mono);
-        font-size: 11px;
-        width: 70px;
-        text-align: right;
-        flex-shrink: 0;
-        color: var(--ink2);
-    }
-
-    .ph-val.current {
-        color: var(--green);
-        font-weight: 500;
-    }
-
-    .modal-desc {
-        font-size: 15px;
-        line-height: 1.75;
-        color: var(--ink2);
-        margin-bottom: 1rem;
-        border-left: 3px solid var(--ink);
-        padding-left: 1rem;
-    }
-
-    .expire-strip {
-        background: var(--paper2);
-        border: 1px solid var(--border2);
-        padding: 8px 14px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 1.5rem;
-        font-family: var(--mono);
-        font-size: 12px;
-        color: var(--ink2);
-    }
-
-    .expire-strip.urgent {
-        border-color: var(--red2);
-        background: #fff5f5;
-        color: var(--red2);
-    }
-
-    .loading-state {
-        text-align: center;
-        padding: 4rem 2rem;
-        font-family: var(--mono);
-        font-size: 12px;
-        color: var(--ink3);
-        letter-spacing: 1px;
-    }
-
-    .loading-bar {
-        width: 200px;
-        height: 2px;
-        background: var(--paper3);
-        margin: 1rem auto 0;
-        overflow: hidden;
-    }
-
-    .loading-fill {
-        height: 100%;
-        background: var(--ink);
-        animation: load 1.2s ease-in-out infinite;
-    }
-
-    @keyframes load {
-        0% {
-            width: 0;
-            margin-left: 0;
-        }
-
-        50% {
-            width: 60%;
-        }
-
-        100% {
-            width: 0;
-            margin-left: 100%;
-        }
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(8px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }/* screenshots */
-    .screenshots-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 4px;
-    }
-
-    .screenshot-img {
-        width: 100%;
-        aspect-ratio: 16/9;
-        object-fit: cover;
-        display: block;
-    }
-
-    .screenshot-ph {
-        aspect-ratio: 16/9;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        background: var(--paper3);
-        color: var(--ink3);
-    }
-
-    @media (max-width: 900px) {
-        .hero-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .hero-side {
-            border-left: none;
-            border-top: 1px solid var(--border);
-            flex-direction: row;
-        }
-
-        .hero-side-item {
-            border-bottom: none;
-            border-right: 1px solid var(--border);
-        }
-
-        .pub-name {
-            font-size: 1.8rem;
-        }
-
-        .cards-grid {
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-        }
-
-        .rogue-grid {
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-        }
-
-        .modal {
-            margin: 0;
-        }
-
-        .price-editorial {
-            grid-template-columns: 1fr;
-        }
-
-        .price-divider {
-            display: none;
-        }
-
-        .screenshots-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
-    @media (max-width: 600px) {
-        .masthead {
-            padding: .5rem 1rem 0;
-        }
-
-        .page-wrap {
-            padding: 0 1rem;
-        }
-
-        .pub-name {
-            font-size: 1.5rem;
-        }
-
-        .rogue-section {
-            padding: 1.25rem 1rem;
-        }
-
-        .modal-body {
-            padding: 1rem;
-        }
-
-        .modal-title {
-            font-size: 1.7rem;
-        }
-
-        .cards-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .hero-side {
-            flex-direction: column;
-        }
-
-        .hero-side-item {
-            border-right: none;
-            border-bottom: 1px solid var(--border);
-        }
-    }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SWITCH特賣報 — 台灣 eShop 遊戲特價誌</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Noto+Sans+TC:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#111010;--ink2:#2c2a2a;--ink3:#5a5656;--ink4:#9a9494;
+  --paper:#faf8f3;--paper2:#f2efe8;--paper3:#e8e4da;
+  --red:#c0392b;--red2:#e74c3c;--gold:#b8860b;--gold2:#d4a017;--green:#1a7a4a;
+  --border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.22);
+  --serif:'Playfair Display',Georgia,serif;--sans:'Noto Sans TC',sans-serif;--mono:'DM Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);font-size:15px;line-height:1.65;}
+
+/* MASTHEAD */
+.masthead{border-bottom:3px double var(--ink);padding:.75rem 2rem 0;background:var(--paper);position:sticky;top:0;z-index:200;}
+.masthead-top{display:flex;align-items:flex-end;justify-content:space-between;padding-bottom:.5rem;border-bottom:1px solid var(--border);}
+.pub-name{font-family:var(--serif);font-size:2.8rem;font-weight:900;letter-spacing:-2px;line-height:1;color:var(--ink);text-transform:uppercase;}
+.pub-name sup{font-size:.9rem;font-weight:700;letter-spacing:1px;color:var(--red);vertical-align:super;font-family:var(--sans);}
+.pub-meta{text-align:right;font-family:var(--mono);font-size:11px;color:var(--ink3);line-height:1.6;}
+.masthead-nav{display:flex;align-items:center;gap:0;padding:4px 0 0;overflow-x:auto;scrollbar-width:none;}
+.masthead-nav::-webkit-scrollbar{display:none;}
+.nav-item{font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:.5px;text-transform:uppercase;color:var(--ink2);padding:6px 16px;cursor:pointer;white-space:nowrap;border:none;background:none;border-right:1px solid var(--border);transition:all .15s;}
+.nav-item:first-child{padding-left:0;}
+.nav-item:hover,.nav-item.active{color:var(--red);}
+.nav-item.active{font-weight:700;}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.search-wrap{display:flex;align-items:center;gap:6px;border:1px solid var(--border2);border-radius:2px;padding:4px 10px;background:white;}
+.search-wrap input{font-family:var(--sans);font-size:12px;border:none;outline:none;background:none;color:var(--ink);width:140px;}
+.search-wrap input::placeholder{color:var(--ink4);}
+
+/* BANNER */
+.issue-banner{background:var(--ink);color:white;display:flex;align-items:center;justify-content:center;gap:1.5rem;padding:10px 2rem;font-family:var(--mono);font-size:11px;letter-spacing:.5px;flex-wrap:wrap;}
+.issue-banner .sep{color:rgba(255,255,255,.3);}
+.live-dot{display:inline-block;width:7px;height:7px;background:#2ecc71;border-radius:50%;animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+.stat-inline{color:var(--gold2);font-weight:500;}
+.api-status{font-family:var(--mono);font-size:11px;padding:3px 8px;border-radius:2px;}
+.api-status.live{background:#d4edda;color:var(--green);}
+.api-status.demo{background:#fff3cd;color:var(--gold);}
+
+/* PAGE */
+.page-wrap{max-width:1380px;margin:0 auto;padding:0 2rem;}
+.api-note{background:var(--paper2);border:1px solid var(--border);border-left:3px solid var(--gold2);padding:10px 14px;font-family:var(--mono);font-size:11px;color:var(--ink3);margin-bottom:1.5rem;display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:1rem;}
+
+/* HERO */
+.hero-section{padding:2.5rem 0 2rem;border-bottom:2px solid var(--ink);}
+.hero-label{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:1rem;display:flex;align-items:center;gap:8px;}
+.hero-label::after{content:'';flex:1;height:1px;background:var(--border2);}
+.hero-grid{display:grid;grid-template-columns:1fr 320px;gap:2px;}
+.hero-main{grid-row:1/3;position:relative;cursor:pointer;overflow:hidden;background:var(--ink);min-height:380px;}
+.hero-main:hover .hero-img{transform:scale(1.03);}
+.hero-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease;opacity:.85;position:absolute;inset:0;}
+.hero-fallback{width:100%;min-height:380px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;}
+.hero-fallback-emoji{font-size:6rem;}
+.hero-fallback-name{font-family:var(--serif);font-size:1.2rem;color:rgba(255,255,255,.4);font-style:italic;}
+.hero-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.92) 55%);padding:2.5rem 1.5rem 1.5rem;color:white;z-index:2;}
+.hero-genre-tag{display:inline-block;background:var(--red);color:white;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 8px;margin-bottom:.5rem;}
+.hero-title{font-family:var(--serif);font-size:2.2rem;font-weight:900;line-height:1.1;margin-bottom:.5rem;letter-spacing:-.5px;}
+.hero-subtitle{font-size:13px;color:rgba(255,255,255,.75);margin-bottom:1rem;}
+.hero-price-row{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;}
+.hero-sale-price{font-family:var(--serif);font-size:1.8rem;font-weight:700;color:#2ecc71;}
+.hero-orig-price{font-size:14px;color:rgba(255,255,255,.5);text-decoration:line-through;}
+.hero-discount{background:var(--red2);color:white;font-size:13px;font-weight:700;padding:3px 10px;border-radius:2px;}
+.hero-atl{background:var(--gold);color:white;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;}
+.hero-side{border-left:1px solid var(--border2);display:flex;flex-direction:column;}
+.hero-side-item{flex:1;padding:1rem 1.25rem;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;position:relative;overflow:hidden;display:grid;grid-template-columns:56px 1fr;gap:10px;align-items:center;}
+.hero-side-item:last-child{border-bottom:none;}
+.hero-side-item:hover{background:var(--paper2);}
+.side-thumb{width:56px;height:34px;object-fit:cover;display:block;background:var(--ink2);}
+.side-thumb-fallback{width:56px;height:34px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;}
+.side-info{}
+.side-rank{font-family:var(--mono);font-size:11px;color:var(--ink4);}
+.side-genre{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--red);}
+.side-title{font-family:var(--serif);font-size:.95rem;font-weight:700;line-height:1.2;margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
+.side-price{font-size:13px;color:var(--green);font-weight:700;}
+.side-orig{color:var(--ink4);text-decoration:line-through;font-size:12px;}
+
+/* SECTION */
+.section-head{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:1rem;padding:1.5rem 0 1rem;}
+.section-head-title{font-family:var(--serif);font-size:1.4rem;font-weight:700;font-style:italic;}
+.section-head-line{height:1px;background:var(--border2);}
+.section-head-count{font-family:var(--mono);font-size:11px;color:var(--ink3);}
+
+/* FILTER */
+.filter-bar{display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;flex-wrap:wrap;border-bottom:1px solid var(--border);padding-bottom:1rem;}
+.filter-label{font-family:var(--mono);font-size:11px;color:var(--ink3);letter-spacing:.5px;}
+.filter-chip{font-size:12px;font-weight:500;border:1px solid var(--border2);background:white;color:var(--ink2);padding:5px 12px;cursor:pointer;border-radius:2px;transition:all .15s;font-family:var(--sans);}
+.filter-chip:hover{background:var(--paper2);}
+.filter-chip.active{background:var(--ink);color:white;border-color:var(--ink);}
+.filter-chip.rogue-chip.active{background:var(--red);border-color:var(--red);}
+.sort-select{margin-left:auto;font-family:var(--mono);font-size:11px;border:1px solid var(--border2);padding:5px 10px;background:white;color:var(--ink);cursor:pointer;appearance:none;outline:none;}
+
+/* CARDS */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0;border-top:1px solid var(--border);border-left:1px solid var(--border);}
+.game-card{border-right:1px solid var(--border);border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;position:relative;background:var(--paper);}
+.game-card:hover{background:var(--paper2);}
+
+/* Card image with gradient fallback */
+.card-img-wrap{width:100%;aspect-ratio:16/9;position:relative;overflow:hidden;}
+.card-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s;}
+.game-card:hover .card-img{transform:scale(1.04);}
+.card-img-fallback{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;position:absolute;inset:0;}
+.card-fallback-emoji{font-size:2.5rem;line-height:1;}
+.card-fallback-genre{font-family:var(--mono);font-size:9px;color:rgba(255,255,255,.45);letter-spacing:1px;text-transform:uppercase;}
+
+.card-discount-flag{position:absolute;top:0;left:0;background:var(--red);color:white;font-family:var(--mono);font-size:13px;font-weight:500;padding:4px 10px;line-height:1;z-index:3;}
+.card-atl-flag{position:absolute;top:0;right:0;background:var(--gold);color:white;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:4px 7px;line-height:1;z-index:3;}
+.card-rogue-flag{position:absolute;bottom:0;left:0;background:rgba(17,0,17,.85);color:#e88;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 7px;border-top:1px solid #e88;border-right:1px solid #e88;z-index:3;}
+.card-rank-num{position:absolute;top:8px;left:42px;font-family:var(--serif);font-size:11px;font-style:italic;color:rgba(255,255,255,.9);background:rgba(0,0,0,.5);padding:2px 6px;z-index:3;}
+.card-body{padding:10px 12px 12px;}
+.card-category{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--red);margin-bottom:4px;}
+.card-title{font-family:var(--serif);font-size:.95rem;font-weight:700;line-height:1.25;color:var(--ink);margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.card-price-line{display:flex;align-items:baseline;gap:8px;margin-bottom:4px;}
+.card-sale{font-size:1.05rem;font-weight:700;color:var(--green);}
+.card-orig{font-size:12px;color:var(--ink4);text-decoration:line-through;}
+.card-expire{font-family:var(--mono);font-size:10px;color:var(--ink4);}
+.card-expire.urgent{color:var(--red2);}
+
+/* ROGUELIKE */
+.rogue-section{margin-top:2rem;background:var(--ink);color:white;padding:2rem;}
+.rogue-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,.15);padding-bottom:1rem;}
+.rogue-title{font-family:var(--serif);font-size:1.8rem;font-weight:900;font-style:italic;letter-spacing:-.5px;}
+.rogue-title span{color:#e88;}
+.rogue-desc{font-size:12px;color:rgba(255,255,255,.5);font-family:var(--mono);}
+.rogue-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:1px;background:rgba(255,255,255,.1);}
+.rogue-card{background:var(--ink);padding:0;cursor:pointer;transition:background .15s;position:relative;overflow:hidden;}
+.rogue-card:hover{background:var(--ink2);}
+.rogue-card-img-wrap{width:100%;aspect-ratio:16/9;position:relative;overflow:hidden;}
+.rogue-card-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s;}
+.rogue-card:hover .rogue-card-img{transform:scale(1.04);}
+.rogue-card-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2.5rem;position:absolute;inset:0;}
+.rogue-card-body{padding:10px 12px 12px;}
+.rogue-num{font-family:var(--serif);font-size:1.8rem;font-weight:900;color:rgba(255,255,255,.07);position:absolute;top:6px;right:10px;line-height:1;z-index:2;}
+.rogue-card-category{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#e88;margin-bottom:4px;}
+.rogue-card-title{font-family:var(--serif);font-size:.95rem;font-weight:700;color:white;line-height:1.25;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.rogue-price{color:#5ef8a0;font-size:1rem;font-weight:700;}
+.rogue-orig{color:rgba(255,255,255,.35);text-decoration:line-through;font-size:12px;}
+
+/* MODAL */
+.modal-wrap{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.78);overflow-y:auto;}
+.modal-wrap.open{display:block;}
+.modal{background:var(--paper);max-width:820px;margin:3rem auto;border:2px solid var(--ink);box-shadow:8px 8px 0 var(--ink);}
+.modal-img-wrap{width:100%;aspect-ratio:16/9;position:relative;overflow:hidden;background:var(--ink);}
+.modal-img{width:100%;height:100%;object-fit:cover;display:block;}
+.modal-img-fallback{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;font-size:6rem;position:absolute;inset:0;}
+.modal-close{position:fixed;top:1rem;right:1rem;width:40px;height:40px;background:var(--ink);color:white;border:none;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;}
+.modal-close:hover{background:var(--red);}
+.modal-body{padding:2rem;}
+.modal-kicker{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:.5rem;}
+.modal-title{font-family:var(--serif);font-size:2.5rem;font-weight:900;line-height:1.05;letter-spacing:-1px;margin-bottom:1rem;}
+.modal-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem;}
+.modal-tag{font-size:11px;letter-spacing:.5px;text-transform:uppercase;border:1px solid var(--border2);padding:3px 10px;font-family:var(--sans);font-weight:500;}
+.modal-tag.rogue{background:var(--ink);color:#e88;border-color:#e88;}
+.modal-tag.atl{background:var(--gold);color:white;border:none;}
+.price-editorial{display:grid;grid-template-columns:1fr 1px 1fr;border:2px solid var(--ink);margin-bottom:1.5rem;}
+.price-col{padding:1.25rem 1.5rem;}
+.price-divider{background:var(--ink);}
+.price-label{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);margin-bottom:.25rem;}
+.price-big{font-family:var(--serif);font-size:2.2rem;font-weight:700;line-height:1;color:var(--green);}
+.price-orig-big{font-size:1.1rem;color:var(--ink4);text-decoration:line-through;font-family:var(--serif);}
+.price-discount-big{font-family:var(--serif);font-size:2.2rem;font-weight:700;color:var(--red);line-height:1;}
+.price-save{font-size:12px;color:var(--green);margin-top:4px;}
+.eshop-link-btn{display:inline-block;background:var(--ink);color:white;padding:12px 28px;font-family:var(--serif);font-size:1rem;font-weight:700;font-style:italic;border:2px solid var(--ink);cursor:pointer;text-decoration:none;transition:all .15s;letter-spacing:.5px;}
+.eshop-link-btn:hover{background:var(--red);border-color:var(--red);}
+.modal-tabs{display:flex;border-bottom:2px solid var(--ink);margin-bottom:1.5rem;}
+.mtab{font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;padding:8px 16px;cursor:pointer;border:none;background:none;color:var(--ink3);border-bottom:2px solid transparent;margin-bottom:-2px;}
+.mtab.active{color:var(--ink);border-bottom-color:var(--ink);font-weight:700;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+.ph-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.ph-mo{font-family:var(--mono);font-size:11px;color:var(--ink3);width:40px;flex-shrink:0;}
+.ph-bar-bg{flex:1;height:10px;background:var(--paper3);border:1px solid var(--border);}
+.ph-bar-fill{height:100%;background:var(--ink3);transition:width .5s ease;}
+.ph-bar-fill.current{background:var(--green);}
+.ph-bar-fill.low{background:var(--gold2);}
+.ph-val{font-family:var(--mono);font-size:11px;width:70px;text-align:right;flex-shrink:0;color:var(--ink2);}
+.ph-val.current{color:var(--green);font-weight:500;}
+.modal-desc{font-size:15px;line-height:1.75;color:var(--ink2);margin-bottom:1rem;border-left:3px solid var(--ink);padding-left:1rem;}
+.expire-strip{background:var(--paper2);border:1px solid var(--border2);padding:8px 14px;display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;font-family:var(--mono);font-size:12px;color:var(--ink2);}
+.expire-strip.urgent{border-color:var(--red2);background:#fff5f5;color:var(--red2);}
+.loading-state{text-align:center;padding:4rem 2rem;font-family:var(--mono);font-size:12px;color:var(--ink3);letter-spacing:1px;}
+.loading-bar{width:200px;height:2px;background:var(--paper3);margin:1rem auto 0;overflow:hidden;}
+.loading-fill{height:100%;background:var(--ink);animation:load 1.2s ease-in-out infinite;}
+@keyframes load{0%{width:0;margin-left:0;}50%{width:60%;}100%{width:0;margin-left:100%;}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* screenshots */
+.screenshots-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;}
+.screenshot-img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;}
+.screenshot-ph{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;font-size:2rem;background:var(--paper3);color:var(--ink3);}
+
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr;}
+  .hero-side{border-left:none;border-top:1px solid var(--border);flex-direction:row;}
+  .hero-side-item{border-bottom:none;border-right:1px solid var(--border);}
+  .pub-name{font-size:1.8rem;}
+  .cards-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}
+  .rogue-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}
+  .modal{margin:0;}
+  .price-editorial{grid-template-columns:1fr;}
+  .price-divider{display:none;}
+  .screenshots-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:600px){
+  .masthead{padding:.5rem 1rem 0;}
+  .page-wrap{padding:0 1rem;}
+  .pub-name{font-size:1.5rem;}
+  .rogue-section{padding:1.25rem 1rem;}
+  .modal-body{padding:1rem;}
+  .modal-title{font-size:1.7rem;}
+  .cards-grid{grid-template-columns:repeat(2,1fr);}
+  .hero-side{flex-direction:column;}
+  .hero-side-item{border-right:none;border-bottom:1px solid var(--border);}
+}
+</style>
 </head>
 <body>
 
-    <header class="masthead">
-        <div class="masthead-top">
-            <div>
-                <div class="pub-name">
-                    SWITCH 特賣報
-                    <sup>TW</sup>
-                </div>
-            </div>
-            <div class="pub-meta">
-                台灣 eShop 數位遊戲特價誌
-                <br>
-                <span id="todayDate">—</span>
-                 · 台灣限定
-            </div>
-        </div>
-        <nav class="masthead-nav">
-            <button class="nav-item active" onclick="setSection('sale',this)">折扣排行</button>
-            <button class="nav-item" onclick="setSection('roguelike',this)">Roguelike 專區</button>
-            <button class="nav-item" onclick="setSection('all',this)">所有特價</button>
-            <button class="nav-item" onclick="setSection('atl',this)">歷史低價</button>
-            <div class="nav-right">
-                <div class="search-wrap">
-                    <span style="font-size:12px;color:var(--ink3)">⌕</span>
-                    <input type="text" placeholder="搜尋遊戲名稱…" id="searchInput" oninput="applyFilters()">
-                </div>
-            </div>
-        </nav>
-    </header>
-
-    <div class="issue-banner">
-        <span>
-            <span class="live-dot"></span>
-             LIVE
-        </span>
-        <span class="sep">|</span>
-        <span>資料來源：Nintendo eShop 台灣</span>
-        <span class="sep">|</span>
-        <span>
-            特價中 
-            <span class="stat-inline" id="bannerSaleCount">—</span>
-             款
-        </span>
-        <span class="sep">|</span>
-        <span>
-            最高折扣 
-            <span class="stat-inline" id="bannerMaxDiscount">—</span>
-        </span>
-        <span class="sep">|</span>
-        <span id="apiStatusBadge">
-            <span class="api-status demo">LOADING…</span>
-        </span>
+<header class="masthead">
+  <div class="masthead-top">
+    <div><div class="pub-name">SWITCH 特賣報<sup>TW</sup></div></div>
+    <div class="pub-meta">台灣 eShop 數位遊戲特價誌<br><span id="todayDate">—</span> · 台灣限定</div>
+  </div>
+  <nav class="masthead-nav">
+    <button class="nav-item active" onclick="setSection('sale',this)">折扣排行</button>
+    <button class="nav-item" onclick="setSection('roguelike',this)">Roguelike 專區</button>
+    <button class="nav-item" onclick="setSection('all',this)">所有特價</button>
+    <button class="nav-item" onclick="setSection('atl',this)">歷史低價</button>
+    <div class="nav-right">
+      <div class="search-wrap">
+        <span style="font-size:12px;color:var(--ink3)">⌕</span>
+        <input type="text" placeholder="搜尋遊戲名稱…" id="searchInput" oninput="applyFilters()">
+      </div>
     </div>
+  </nav>
+</header>
 
-    <div class="page-wrap">
-        <div class="api-note" id="apiNote">
-            <span>⏳</span>
-            <span id="apiNoteText">正在從 Nintendo eShop API 載入即時資料…</span>
-        </div>
+<div class="issue-banner">
+  <span><span class="live-dot"></span> LIVE</span>
+  <span class="sep">|</span>
+  <span>資料來源：Nintendo eShop 台灣</span>
+  <span class="sep">|</span>
+  <span>特價中 <span class="stat-inline" id="bannerSaleCount">—</span> 款</span>
+  <span class="sep">|</span>
+  <span>最高折扣 <span class="stat-inline" id="bannerMaxDiscount">—</span></span>
+  <span class="sep">|</span>
+  <span id="apiStatusBadge"><span class="api-status demo">LOADING…</span></span>
+</div>
 
-        <section class="hero-section" id="heroSection">
-            <div class="hero-label">本期封面焦點 · Top Deal</div>
-            <div class="hero-grid" id="heroGrid">
-                <div style="min-height:380px;background:var(--paper2);display:flex;align-items:center;justify-content:center;">
-                    <div class="loading-state">
-                        LOADING…
-                        <div class="loading-bar">
-                            <div class="loading-fill"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+<div class="page-wrap">
+  <div class="api-note" id="apiNote">
+    <span>⏳</span><span id="apiNoteText">正在從 Nintendo eShop API 載入即時資料…</span>
+  </div>
 
-        <section id="saleSection">
-            <div class="section-head">
-                <div class="section-head-title">折扣排行榜</div>
-                <div class="section-head-line"></div>
-                <div class="section-head-count" id="cardCount">— 款特價中</div>
-            </div>
-            <div class="filter-bar">
-                <span class="filter-label">類型 /</span>
-                <button class="filter-chip active" onclick="filterGenre('all',this)">全部</button>
-                <button class="filter-chip rogue-chip" onclick="filterGenre('roguelike',this)">Roguelike ★</button>
-                <button class="filter-chip" onclick="filterGenre('action_adventure',this)">動作冒險</button>
-                <button class="filter-chip" onclick="filterGenre('role_playing',this)">RPG</button>
-                <button class="filter-chip" onclick="filterGenre('puzzle_strategy',this)">益智策略</button>
-                <button class="filter-chip" onclick="filterGenre('simulation',this)">模擬</button>
-                <select class="sort-select" onchange="applySort(this.value)">
-                    <option value="discount">↓ 折扣最高</option>
-                    <option value="price_asc">↓ 價格最低</option>
-                    <option value="price_desc">↓ 價格最高</option>
-                    <option value="name">↓ 名稱</option>
-                </select>
-            </div>
-            <div class="cards-grid" id="cardsGrid">
-                <div style="grid-column:1/-1;padding:4rem;text-align:center;">
-                    <div class="loading-state">
-                        載入中…
-                        <div class="loading-bar">
-                            <div class="loading-fill"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <div class="rogue-section" id="rogueSection" style="display:none">
-            <div class="rogue-header">
-                <div>
-                    <div class="rogue-title">
-                        <span>Roguelike</span>
-                         特別報導
-                    </div>
-                    <div class="rogue-desc">每次死亡都是新的開始 · Taiwan eShop 特價中</div>
-                </div>
-                <span id="rogueCount" style="font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.4)"></span>
-            </div>
-            <div class="rogue-grid" id="rogueGrid"></div>
-        </div>
-
-        <div style="height:4rem"></div>
+  <section class="hero-section" id="heroSection">
+    <div class="hero-label">本期封面焦點 · Top Deal</div>
+    <div class="hero-grid" id="heroGrid">
+      <div style="min-height:380px;background:var(--paper2);display:flex;align-items:center;justify-content:center;">
+        <div class="loading-state">LOADING…<div class="loading-bar"><div class="loading-fill"></div></div></div>
+      </div>
     </div>
+  </section>
 
-    <!-- MODAL -->
-    <div class="modal-wrap" id="modalWrap" onclick="closeModalOutside(event)">
-        <div class="modal" id="modal">
-            <button class="modal-close" onclick="closeModal()">✕</button>
-            <div class="modal-img-wrap" id="modalImgWrap"></div>
-            <div class="modal-body">
-                <div class="modal-kicker" id="modalKicker"></div>
-                <h2 class="modal-title" id="modalTitle"></h2>
-                <div class="modal-tags" id="modalTags"></div>
-                <div class="expire-strip" id="modalExpire"></div>
-                <div class="price-editorial">
-                    <div class="price-col">
-                        <div class="price-label">特賣價格</div>
-                        <div class="price-big" id="modalSalePrice"></div>
-                        <div class="price-orig-big" id="modalOrigPrice"></div>
-                        <div class="price-save" id="modalSave"></div>
-                    </div>
-                    <div class="price-divider"></div>
-                    <div class="price-col">
-                        <div class="price-label">折扣幅度</div>
-                        <div class="price-discount-big" id="modalDiscount"></div>
-                        <div style="margin-top:1rem">
-                            <a class="eshop-link-btn" id="modalEshopBtn" href="#" target="_blank">前往台灣 eShop →</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-tabs">
-                    <button class="mtab active" onclick="switchTab('info',this)">遊戲介紹</button>
-                    <button class="mtab" onclick="switchTab('media',this)">遊戲截圖</button>
-                    <button class="mtab" onclick="switchTab('history',this)">價格歷史</button>
-                </div>
-                <div class="tab-panel active" id="tab-info">
-                    <p class="modal-desc" id="modalDesc"></p>
-                </div>
-                <div class="tab-panel" id="tab-media">
-                    <div class="screenshots-grid" id="modalScreenshots"></div>
-                </div>
-                <div class="tab-panel" id="tab-history">
-                    <div id="priceHistoryEl"></div>
-                    <p style="font-family:var(--mono);font-size:10px;color:var(--ink4);margin-top:1rem">* 即時模式下歷史記錄需串接獨立資料庫儲存</p>
-                </div>
-            </div>
-        </div>
+  <section id="saleSection">
+    <div class="section-head">
+      <div class="section-head-title">折扣排行榜</div>
+      <div class="section-head-line"></div>
+      <div class="section-head-count" id="cardCount">— 款特價中</div>
     </div>
+    <div class="filter-bar">
+      <span class="filter-label">類型 /</span>
+      <button class="filter-chip active" onclick="filterGenre('all',this)">全部</button>
+      <button class="filter-chip rogue-chip" onclick="filterGenre('roguelike',this)">Roguelike ★</button>
+      <button class="filter-chip" onclick="filterGenre('action_adventure',this)">動作冒險</button>
+      <button class="filter-chip" onclick="filterGenre('role_playing',this)">RPG</button>
+      <button class="filter-chip" onclick="filterGenre('puzzle_strategy',this)">益智策略</button>
+      <button class="filter-chip" onclick="filterGenre('simulation',this)">模擬</button>
+      <select class="sort-select" onchange="applySort(this.value)">
+        <option value="discount">↓ 折扣最高</option>
+        <option value="price_asc">↓ 價格最低</option>
+        <option value="price_desc">↓ 價格最高</option>
+        <option value="name">↓ 名稱</option>
+      </select>
+    </div>
+    <div class="cards-grid" id="cardsGrid">
+      <div style="grid-column:1/-1;padding:4rem;text-align:center;">
+        <div class="loading-state">載入中…<div class="loading-bar"><div class="loading-fill"></div></div></div>
+      </div>
+    </div>
+  </section>
 
-    <script>
-    const API_URL = '/api/sales';
+  <div class="rogue-section" id="rogueSection" style="display:none">
+    <div class="rogue-header">
+      <div>
+        <div class="rogue-title"><span>Roguelike</span> 特別報導</div>
+        <div class="rogue-desc">每次死亡都是新的開始 · Taiwan eShop 特價中</div>
+      </div>
+      <span id="rogueCount" style="font-family:var(--mono);font-size:11px;color:rgba(255,255,255,.4)"></span>
+    </div>
+    <div class="rogue-grid" id="rogueGrid"></div>
+  </div>
 
-    const genreMap = {
-        roguelike: 'Roguelike',
-        action: '動作',
-        action_adventure: '動作冒險',
-        role_playing: 'RPG',
-        puzzle_strategy: '益智策略',
-        simulation: '模擬',
-        platformer: '平台跳躍',
-        strategy: '策略',
-        indie: '獨立',
-        metroidvania: 'Metroidvania',
-        sports_racing: '競速體育',
-        music_fitness: '音樂節奏',
-        education: '教育',
-        adventure: '冒險',
-    };
+  <div style="height:4rem"></div>
+</div>
 
-    // Roguelike 自動偵測關鍵字
-    const ROGUE_KEYS = [
-    'rogue', 'roguelike', 'roguelite', 'permadeath', 'procedural', 'deckbuild', 'deck build',
-    'slay the spire', 'hades', 'dead cells', 'into the breach', 'risk of rain',
-    'binding of isaac', 'returnal', 'katana zero', 'gungeon', 'spelunky', 'noita',
-    'darkest dungeon', 'vault of the void', 'monster train', 'inscryption',
-    'astral ascent', 'curse of the dead gods', 'skul', 'rogue legacy', 'moonlighter',
-    'children of morta', 'across the obelisk', 'wildfrost', 'balatro', 'dicey dungeons',
-    'cobalt core', 'peglin', 'brotato', 'vampire survivors', '20 minutes', 'halls of torment',
-    ];
+<!-- MODAL -->
+<div class="modal-wrap" id="modalWrap" onclick="closeModalOutside(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-img-wrap" id="modalImgWrap"></div>
+    <div class="modal-body">
+      <div class="modal-kicker" id="modalKicker"></div>
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <div class="modal-tags" id="modalTags"></div>
+      <div class="expire-strip" id="modalExpire"></div>
+      <div class="price-editorial">
+        <div class="price-col">
+          <div class="price-label">特賣價格</div>
+          <div class="price-big" id="modalSalePrice"></div>
+          <div class="price-orig-big" id="modalOrigPrice"></div>
+          <div class="price-save" id="modalSave"></div>
+        </div>
+        <div class="price-divider"></div>
+        <div class="price-col">
+          <div class="price-label">折扣幅度</div>
+          <div class="price-discount-big" id="modalDiscount"></div>
+          <div style="margin-top:1rem">
+            <a class="eshop-link-btn" id="modalEshopBtn" href="#" target="_blank">前往台灣 eShop →</a>
+          </div>
+        </div>
+      </div>
+      <div class="modal-tabs">
+        <button class="mtab active" onclick="switchTab('info',this)">遊戲介紹</button>
+        <button class="mtab" onclick="switchTab('media',this)">遊戲截圖</button>
+        <button class="mtab" onclick="switchTab('history',this)">價格歷史</button>
+      </div>
+      <div class="tab-panel active" id="tab-info">
+        <p class="modal-desc" id="modalDesc"></p>
+      </div>
+      <div class="tab-panel" id="tab-media">
+        <div class="screenshots-grid" id="modalScreenshots"></div>
+      </div>
+      <div class="tab-panel" id="tab-history">
+        <div id="priceHistoryEl"></div>
+        <p style="font-family:var(--mono);font-size:10px;color:var(--ink4);margin-top:1rem">* 即時模式下歷史記錄需串接獨立資料庫儲存</p>
+      </div>
+    </div>
+  </div>
+</div>
 
-    // 遊戲類型背景漸層（無圖片時使用）
-    const GRADIENTS = {
-        roguelike: 'linear-gradient(135deg,#1a0a2e,#3d1a5c)',
-        action: 'linear-gradient(135deg,#1a0a0a,#5c1a1a)',
-        action_adventure: 'linear-gradient(135deg,#0a1520,#1a3d5c)',
-        role_playing: 'linear-gradient(135deg,#0a1a0a,#1a5c2a)',
-        puzzle_strategy: 'linear-gradient(135deg,#1a1a0a,#5c4a1a)',
-        simulation: 'linear-gradient(135deg,#0a0a1a,#1a2a5c)',
-        platformer: 'linear-gradient(135deg,#1a0a1a,#5c1a4a)',
-        sports_racing: 'linear-gradient(135deg,#0a1a10,#1a5c30)',
-        default: 'linear-gradient(135deg,#111,#2a2a3a)',
-    };
+<script>
+const API_URL = '/api/sales';
 
-    // Demo 資料（API 無法存取時顯示）
-    const DEMO = [
-    {
-        id: 1,
-        nsuid: '70010000020016',
-        name: 'Hades',
-        genres: ['roguelike', 'action'],
-        emoji: '🔥',
-        salePrice: 299,
-        origPrice: 598,
-        discount: 50,
-        expiresIn: 5,
-        allTimeLow: true,
-        coverUrl: null,
-        desc: '在希臘神話冥界中，扮演不死王子 Zagreus 一次次嘗試逃離父親哈迪斯的王國。每次死亡都是新的開始，戰鬥系統流暢爽快，故事豐富動人。入圍多項年度最佳遊戲大獎。',
-        ph: [{
-            m: '10月',
-            p: 598
-        }, {
-            m: '11月',
-            p: 448
-        }, {
-            m: '12月',
-            p: 299
-        }, {
-            m: '1月',
-            p: 598
-        }, {
-            m: '2月',
-            p: 598
-        }, {
-            m: '3月',
-            p: 299
-        }]
-    },
-    {
-        id: 2,
-        nsuid: '70010000020161',
-        name: 'Dead Cells',
-        genres: ['roguelike', 'action'],
-        emoji: '⚔️',
-        salePrice: 199,
-        origPrice: 748,
-        discount: 73,
-        expiresIn: 1,
-        allTimeLow: true,
-        coverUrl: null,
-        desc: 'Roguelike 與 Metroidvania 的完美融合。掌握流暢的戰鬥系統，在每次死亡後帶著永久升級繼續挑戰。超過 20 個風格各異的生物群系等你探索。',
-        ph: [{
-            m: '10月',
-            p: 748
-        }, {
-            m: '11月',
-            p: 374
-        }, {
-            m: '12月',
-            p: 374
-        }, {
-            m: '1月',
-            p: 748
-        }, {
-            m: '2月',
-            p: 748
-        }, {
-            m: '3月',
-            p: 199
-        }]
-    },
-    {
-        id: 3,
-        nsuid: '70010000001827',
-        name: 'Slay the Spire',
-        genres: ['roguelike', 'puzzle_strategy'],
-        emoji: '🃏',
-        salePrice: 249,
-        origPrice: 498,
-        discount: 50,
-        expiresIn: 7,
-        allTimeLow: false,
-        coverUrl: null,
-        desc: '融合卡牌遊戲與 Roguelike 的經典之作。打造你專屬的卡組，挑戰神秘的尖塔頂端。',
-        ph: [{
-            m: '10月',
-            p: 498
-        }, {
-            m: '11月',
-            p: 498
-        }, {
-            m: '12月',
-            p: 249
-        }, {
-            m: '1月',
-            p: 498
-        }, {
-            m: '2月',
-            p: 349
-        }, {
-            m: '3月',
-            p: 249
-        }]
-    },
-    {
-        id: 4,
-        nsuid: '70010000012804',
-        name: 'Risk of Rain 2',
-        genres: ['roguelike', 'action'],
-        emoji: '🌧️',
-        salePrice: 299,
-        origPrice: 748,
-        discount: 60,
-        expiresIn: 4,
-        allTimeLow: false,
-        coverUrl: null,
-        desc: '在外星星球上獨自或與朋友合作對抗怪物大軍。每次遊玩都是全新體驗。',
-        ph: [{
-            m: '10月',
-            p: 748
-        }, {
-            m: '11月',
-            p: 448
-        }, {
-            m: '12月',
-            p: 448
-        }, {
-            m: '1月',
-            p: 748
-        }, {
-            m: '2月',
-            p: 748
-        }, {
-            m: '3月',
-            p: 299
-        }]
-    },
-    {
-        id: 5,
-        nsuid: '70010000002616',
-        name: 'Hollow Knight',
-        genres: ['metroidvania', 'action'],
-        emoji: '🦋',
-        salePrice: 133,
-        origPrice: 333,
-        discount: 60,
-        expiresIn: 10,
-        allTimeLow: false,
-        coverUrl: null,
-        desc: '在廣闊的昆蟲帝國地下廢墟中探索。精緻的手繪美術與深邃的故事。',
-        ph: [{
-            m: '10月',
-            p: 333
-        }, {
-            m: '11月',
-            p: 200
-        }, {
-            m: '12月',
-            p: 133
-        }, {
-            m: '1月',
-            p: 333
-        }, {
-            m: '2月',
-            p: 333
-        }, {
-            m: '3月',
-            p: 133
-        }]
-    },
-    {
-        id: 6,
-        nsuid: '70010000001471',
-        name: 'Celeste',
-        genres: ['platformer', 'indie'],
-        emoji: '🏔️',
-        salePrice: 149,
-        origPrice: 299,
-        discount: 50,
-        expiresIn: 10,
-        allTimeLow: false,
-        coverUrl: null,
-        desc: '幫助 Madeline 征服 Celeste 山，體驗精準的操控與感人的故事。',
-        ph: [{
-            m: '10月',
-            p: 299
-        }, {
-            m: '11月',
-            p: 299
-        }, {
-            m: '12月',
-            p: 149
-        }, {
-            m: '1月',
-            p: 299
-        }, {
-            m: '2月',
-            p: 149
-        }, {
-            m: '3月',
-            p: 149
-        }]
-    },
-    {
-        id: 7,
-        nsuid: '70010000004341',
-        name: 'Stardew Valley',
-        genres: ['simulation', 'role_playing'],
-        emoji: '🌾',
-        salePrice: 183,
-        origPrice: 366,
-        discount: 50,
-        expiresIn: 12,
-        allTimeLow: false,
-        coverUrl: null,
-        desc: '在 Pelican Town 開始農場新生活。種田、採礦、釣魚、與村民建立關係。',
-        ph: [{
-            m: '10月',
-            p: 366
-        }, {
-            m: '11月',
-            p: 366
-        }, {
-            m: '12月',
-            p: 183
-        }, {
-            m: '1月',
-            p: 366
-        }, {
-            m: '2月',
-            p: 183
-        }, {
-            m: '3月',
-            p: 183
-        }]
-    },
-    {
-        id: 8,
-        nsuid: '70010000020602',
-        name: 'Into the Breach',
-        genres: ['roguelike', 'puzzle_strategy'],
-        emoji: '🤖',
-        salePrice: 179,
-        origPrice: 358,
-        discount: 50,
-        expiresIn: 6,
-        allTimeLow: false,
-        coverUrl: null,
-        desc: '完美融合回合制策略與 Roguelike 的益智傑作。操控機甲保衛城市。',
-        ph: []
-    },
-    {
-        id: 9,
-        nsuid: '70010000011701',
-        name: 'Shovel Knight: Treasure Trove',
-        genres: ['platformer', 'action'],
-        emoji: '⛏️',
-        salePrice: 149,
-        origPrice: 748,
-        discount: 80,
-        expiresIn: 1,
-        allTimeLow: true,
-        coverUrl: null,
-        desc: '致敬經典 NES 遊戲的現代傑作，包含四個獨立劇情。',
-        ph: []
-    },
-    {
-        id: 10,
-        nsuid: '70010000012594',
-        name: 'Monster Hunter Rise',
-        genres: ['action_adventure', 'role_playing'],
-        emoji: '🐲',
-        salePrice: 798,
-        origPrice: 1498,
-        discount: 47,
-        expiresIn: 14,
-        allTimeLow: false,
-        coverUrl: null,
-        desc: '與夥伴們一同狩獵巨大怪獸，全新的翔蟲系統帶來更自由的立體機動。',
-        ph: []
-    },
-    {
-        id: 11,
-        nsuid: '70010000003503',
-        name: 'Cuphead',
-        genres: ['action_adventure', 'platformer'],
-        emoji: '🎪',
-        salePrice: 332,
-        origPrice: 498,
-        discount: 33,
-        expiresIn: 8,
-        allTimeLow: false,
-        coverUrl: null,
-        desc: '1930年代卡通風格的高難度 Boss Rush 遊戲。',
-        ph: []
-    },
-    {
-        id: 12,
-        nsuid: '70010000004353',
-        name: 'Katana ZERO',
-        genres: ['action_adventure', 'roguelike'],
-        emoji: '🗡️',
-        salePrice: 149,
-        origPrice: 298,
-        discount: 50,
-        expiresIn: 5,
-        allTimeLow: false,
-        coverUrl: null,
-        desc: '新復古黑色電影風格動作平台遊戲。用慢動作和劍術一擊斃敵。',
-        ph: []
-    },
-    ];
+const genreMap = {
+  roguelike:'Roguelike',action:'動作',action_adventure:'動作冒險',role_playing:'RPG',
+  puzzle_strategy:'益智策略',simulation:'模擬',platformer:'平台跳躍',strategy:'策略',
+  indie:'獨立',metroidvania:'Metroidvania',sports_racing:'競速體育',
+  music_fitness:'音樂節奏',education:'教育',adventure:'冒險',
+};
 
-    let allGames = [],
-        filtered = [];
-    let currentGenre = 'all',
-        currentSort = 'discount',
-        currentSection = 'sale';
+// Roguelike 自動偵測關鍵字
+const ROGUE_KEYS = [
+  'rogue','roguelike','roguelite','permadeath','procedural','deckbuild','deck build',
+  'slay the spire','hades','dead cells','into the breach','risk of rain',
+  'binding of isaac','returnal','katana zero','gungeon','spelunky','noita',
+  'darkest dungeon','vault of the void','monster train','inscryption',
+  'astral ascent','curse of the dead gods','skul','rogue legacy','moonlighter',
+  'children of morta','across the obelisk','wildfrost','balatro','dicey dungeons',
+  'cobalt core','peglin','brotato','vampire survivors','20 minutes','halls of torment',
+];
 
-    // ── 解析 Nintendo API 資料 ────────────────────────────────
-    function parseGame(raw, index) {
-        // 支援兩種格式：
-        // 格式A: 舊的 sales API 直接回傳 price 物件
-        // 格式B: 新的 price API，預先處理好 _discount/_salePrice/_origPrice/_expiresIn
+// 遊戲類型背景漸層（無圖片時使用）
+const GRADIENTS = {
+  roguelike:'linear-gradient(135deg,#1a0a2e,#3d1a5c)',
+  action:'linear-gradient(135deg,#1a0a0a,#5c1a1a)',
+  action_adventure:'linear-gradient(135deg,#0a1520,#1a3d5c)',
+  role_playing:'linear-gradient(135deg,#0a1a0a,#1a5c2a)',
+  puzzle_strategy:'linear-gradient(135deg,#1a1a0a,#5c4a1a)',
+  simulation:'linear-gradient(135deg,#0a0a1a,#1a2a5c)',
+  platformer:'linear-gradient(135deg,#1a0a1a,#5c1a4a)',
+  sports_racing:'linear-gradient(135deg,#0a1a10,#1a5c30)',
+  default:'linear-gradient(135deg,#111,#2a2a3a)',
+};
 
-        let salePrice,
-            origPrice,
-            discount,
-            expiresIn;
+// Demo 資料（API 無法存取時顯示）
+const DEMO = [
+  {id:1,nsuid:'70010000020016',name:'Hades',genres:['roguelike','action'],emoji:'🔥',salePrice:299,origPrice:598,discount:50,expiresIn:5,allTimeLow:true,coverUrl:null,desc:'在希臘神話冥界中，扮演不死王子 Zagreus 一次次嘗試逃離父親哈迪斯的王國。每次死亡都是新的開始，戰鬥系統流暢爽快，故事豐富動人。入圍多項年度最佳遊戲大獎。',ph:[{m:'10月',p:598},{m:'11月',p:448},{m:'12月',p:299},{m:'1月',p:598},{m:'2月',p:598},{m:'3月',p:299}]},
+  {id:2,nsuid:'70010000020161',name:'Dead Cells',genres:['roguelike','action'],emoji:'⚔️',salePrice:199,origPrice:748,discount:73,expiresIn:1,allTimeLow:true,coverUrl:null,desc:'Roguelike 與 Metroidvania 的完美融合。掌握流暢的戰鬥系統，在每次死亡後帶著永久升級繼續挑戰。超過 20 個風格各異的生物群系等你探索。',ph:[{m:'10月',p:748},{m:'11月',p:374},{m:'12月',p:374},{m:'1月',p:748},{m:'2月',p:748},{m:'3月',p:199}]},
+  {id:3,nsuid:'70010000001827',name:'Slay the Spire',genres:['roguelike','puzzle_strategy'],emoji:'🃏',salePrice:249,origPrice:498,discount:50,expiresIn:7,allTimeLow:false,coverUrl:null,desc:'融合卡牌遊戲與 Roguelike 的經典之作。打造你專屬的卡組，挑戰神秘的尖塔頂端。',ph:[{m:'10月',p:498},{m:'11月',p:498},{m:'12月',p:249},{m:'1月',p:498},{m:'2月',p:349},{m:'3月',p:249}]},
+  {id:4,nsuid:'70010000012804',name:'Risk of Rain 2',genres:['roguelike','action'],emoji:'🌧️',salePrice:299,origPrice:748,discount:60,expiresIn:4,allTimeLow:false,coverUrl:null,desc:'在外星星球上獨自或與朋友合作對抗怪物大軍。每次遊玩都是全新體驗。',ph:[{m:'10月',p:748},{m:'11月',p:448},{m:'12月',p:448},{m:'1月',p:748},{m:'2月',p:748},{m:'3月',p:299}]},
+  {id:5,nsuid:'70010000002616',name:'Hollow Knight',genres:['metroidvania','action'],emoji:'🦋',salePrice:133,origPrice:333,discount:60,expiresIn:10,allTimeLow:false,coverUrl:null,desc:'在廣闊的昆蟲帝國地下廢墟中探索。精緻的手繪美術與深邃的故事。',ph:[{m:'10月',p:333},{m:'11月',p:200},{m:'12月',p:133},{m:'1月',p:333},{m:'2月',p:333},{m:'3月',p:133}]},
+  {id:6,nsuid:'70010000001471',name:'Celeste',genres:['platformer','indie'],emoji:'🏔️',salePrice:149,origPrice:299,discount:50,expiresIn:10,allTimeLow:false,coverUrl:null,desc:'幫助 Madeline 征服 Celeste 山，體驗精準的操控與感人的故事。',ph:[{m:'10月',p:299},{m:'11月',p:299},{m:'12月',p:149},{m:'1月',p:299},{m:'2月',p:149},{m:'3月',p:149}]},
+  {id:7,nsuid:'70010000004341',name:'Stardew Valley',genres:['simulation','role_playing'],emoji:'🌾',salePrice:183,origPrice:366,discount:50,expiresIn:12,allTimeLow:false,coverUrl:null,desc:'在 Pelican Town 開始農場新生活。種田、採礦、釣魚、與村民建立關係。',ph:[{m:'10月',p:366},{m:'11月',p:366},{m:'12月',p:183},{m:'1月',p:366},{m:'2月',p:183},{m:'3月',p:183}]},
+  {id:8,nsuid:'70010000020602',name:'Into the Breach',genres:['roguelike','puzzle_strategy'],emoji:'🤖',salePrice:179,origPrice:358,discount:50,expiresIn:6,allTimeLow:false,coverUrl:null,desc:'完美融合回合制策略與 Roguelike 的益智傑作。操控機甲保衛城市。',ph:[]},
+  {id:9,nsuid:'70010000011701',name:'Shovel Knight: Treasure Trove',genres:['platformer','action'],emoji:'⛏️',salePrice:149,origPrice:748,discount:80,expiresIn:1,allTimeLow:true,coverUrl:null,desc:'致敬經典 NES 遊戲的現代傑作，包含四個獨立劇情。',ph:[]},
+  {id:10,nsuid:'70010000012594',name:'Monster Hunter Rise',genres:['action_adventure','role_playing'],emoji:'🐲',salePrice:798,origPrice:1498,discount:47,expiresIn:14,allTimeLow:false,coverUrl:null,desc:'與夥伴們一同狩獵巨大怪獸，全新的翔蟲系統帶來更自由的立體機動。',ph:[]},
+  {id:11,nsuid:'70010000003503',name:'Cuphead',genres:['action_adventure','platformer'],emoji:'🎪',salePrice:332,origPrice:498,discount:33,expiresIn:8,allTimeLow:false,coverUrl:null,desc:'1930年代卡通風格的高難度 Boss Rush 遊戲。',ph:[]},
+  {id:12,nsuid:'70010000004353',name:'Katana ZERO',genres:['action_adventure','roguelike'],emoji:'🗡️',salePrice:149,origPrice:298,discount:50,expiresIn:5,allTimeLow:false,coverUrl:null,desc:'新復古黑色電影風格動作平台遊戲。用慢動作和劍術一擊斃敵。',ph:[]},
+];
 
-        if (raw._discount !== undefined) {
-            // 格式B（新版 price API）
-            salePrice = raw._salePrice;
-            origPrice = raw._origPrice;
-            discount = raw._discount;
-            expiresIn = raw._expiresIn || 7;
-        } else {
-            // 格式A（舊版 sales API）
-            const price = raw.price || {};
-            const dp = price.discount_price || {};
-            const rp = price.regular_price || {};
-            salePrice = parseFloat(dp.raw_value || dp.amount || 0);
-            origPrice = parseFloat(rp.raw_value || rp.amount || 0);
-            discount = dp.discount_rate
-            ? parseInt(dp.discount_rate)
-            : (origPrice > 0 ? Math.round((1 - salePrice / origPrice) * 100) : 0);
-            const endDt = dp.end_datetime;
-            expiresIn = endDt
-            ? Math.max(1, Math.ceil((new Date(endDt) - Date.now()) / 86400000))
-            : 7;
-        }
+let allGames=[], filtered=[];
+let currentGenre='all', currentSort='discount', currentSection='sale';
 
-        if (salePrice <= 0 || origPrice <= 0 || discount <= 0)
-            return null;
+// ── 解析 Nintendo API 資料 ────────────────────────────────
+function parseGame(raw, index) {
+  // 支援兩種格式：
+  // 格式A: 舊的 sales API 直接回傳 price 物件
+  // 格式B: 新的 price API，預先處理好 _discount/_salePrice/_origPrice/_expiresIn
 
-        const name = raw.formal_name || raw.title || '';
-        if (!name)
-            return null;
+  let salePrice, origPrice, discount, expiresIn;
 
-        const nameLC = name.toLowerCase();
-        const descLC = (raw.description || raw.catch_copy || '').toLowerCase();
-        const combined = nameLC + ' ' + descLC;
-        const isRogue = ROGUE_KEYS.some(k => combined.includes(k));
+  if (raw._discount !== undefined) {
+    // 格式B（新版 price API）
+    salePrice = raw._salePrice;
+    origPrice = raw._origPrice;
+    discount  = raw._discount;
+    expiresIn = raw._expiresIn || 7;
+  } else {
+    // 格式A（舊版 sales API）
+    const price = raw.price || {};
+    const dp = price.discount_price || {};
+    const rp = price.regular_price || {};
+    salePrice = parseFloat(dp.raw_value || dp.amount || 0);
+    origPrice = parseFloat(rp.raw_value || rp.amount || 0);
+    discount  = dp.discount_rate
+      ? parseInt(dp.discount_rate)
+      : (origPrice > 0 ? Math.round((1 - salePrice / origPrice) * 100) : 0);
+    const endDt = dp.end_datetime;
+    expiresIn = endDt
+      ? Math.max(1, Math.ceil((new Date(endDt) - Date.now()) / 86400000))
+      : 7;
+  }
 
-        const rawGenre = (raw.genre || raw.category || '').toLowerCase().replace(/ & /g, '_').replace(/ /g, '_');
-        const genres = rawGenre ? [rawGenre] : ['action'];
-        if (isRogue && !genres.includes('roguelike'))
-            genres.unshift('roguelike');
+  if (salePrice <= 0 || origPrice <= 0 || discount <= 0) return null;
 
-        // 圖片
-        const coverUrl = raw.hero_banner_url || raw.banner_url || raw.image_url || null;
+  const name = raw.formal_name || raw.title || '';
+  if (!name) return null;
 
-        return {
-            id: index + 1,
-            nsuid: String(raw.id || ''),
-            eshopLink: raw._eshopLink || null,
-            country: raw._country || 'HK',
-            name,
-            genres,
-            emoji: '🎮',
-            salePrice: Math.round(salePrice),
-            origPrice: Math.round(origPrice),
-            discount,
-            expiresIn,
-            allTimeLow: false,
-            coverUrl,
-            desc: raw.description || raw.catch_copy || '',
-            ph: [],
-        };
-    }
+  const nameLC = name.toLowerCase();
+  const descLC = (raw.description || raw.catch_copy || '').toLowerCase();
+  const combined = nameLC + ' ' + descLC;
+  const isRogue = ROGUE_KEYS.some(k => combined.includes(k));
 
-    // ── 圖片渲染（含 fallback）────────────────────────────────
-    function imgTag(url, alt, cls, gradient) {
-        if (!url)
-            return '';
-        return `<img class="${cls}" src="${url}" alt="${escHtml(alt)}" loading="lazy"
-    onerror="this.style.display='none';this.nextElementSibling&&(this.nextElementSibling.style.display='flex')">`
-        ;
-    }
+  const rawGenre = (raw.genre || raw.category || '').toLowerCase().replace(/ & /g,'_').replace(/ /g,'_');
+  const genres = rawGenre ? [rawGenre] : ['action'];
+  if (isRogue && !genres.includes('roguelike')) genres.unshift('roguelike');
 
-    function fallbackDiv(g, cls, emojiCls, textCls) {
-        const grad = GRADIENTS[g.genres[0]] || GRADIENTS.default;
-        return `<div class="${cls}" style="background:${grad}">
+  // 圖片
+  const coverUrl = raw.hero_banner_url || raw.banner_url || raw.image_url || null;
+
+  return {
+    id: index + 1,
+    nsuid: String(raw.id || ''),
+    eshopLink: raw._eshopLink || null,
+    country: raw._country || '',
+    name,
+    genres,
+    emoji: '🎮',
+    salePrice: Math.round(salePrice),
+    origPrice: Math.round(origPrice),
+    discount,
+    expiresIn,
+    allTimeLow: false,
+    coverUrl,
+    desc: raw.description || raw.catch_copy || '',
+    ph: [],
+  };
+}
+
+// ── 圖片渲染（含 fallback）────────────────────────────────
+function imgTag(url, alt, cls, gradient) {
+  if (!url) return '';
+  return `<img class="${cls}" src="${url}" alt="${escHtml(alt)}" loading="lazy"
+    onerror="this.style.display='none';this.nextElementSibling&&(this.nextElementSibling.style.display='flex')">`;
+}
+
+function fallbackDiv(g, cls, emojiCls, textCls) {
+  const grad = GRADIENTS[g.genres[0]] || GRADIENTS.default;
+  return `<div class="${cls}" style="background:${grad}">
     <span class="${emojiCls}">${g.emoji}</span>
-    ${textCls ? `<span class="${textCls}">${(genreMap[g.genres[0]] || g.genres[0]).toUpperCase()}</span>` : ''}
-  </div>`
-        ;
+    ${textCls ? `<span class="${textCls}">${(genreMap[g.genres[0]]||g.genres[0]).toUpperCase()}</span>` : ''}
+  </div>`;
+}
+
+function escHtml(s) { return (s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+// ── INIT ─────────────────────────────────────────────────
+async function init() {
+  document.getElementById('todayDate').textContent = new Date().toLocaleDateString('zh-TW',{year:'numeric',month:'long',day:'numeric',weekday:'short'});
+
+  let liveData = null;
+  try {
+    const res = await fetch(API_URL, {signal: AbortSignal.timeout(12000)});
+    if (res.ok) {
+      const json = await res.json();
+      if (json?.contents?.length) {
+        liveData = json.contents.map((g,i) => parseGame(g,i)).filter(Boolean);
+      }
     }
+  } catch(e) {}
 
-    function escHtml(s) {
-        return (s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-    }
+  if (liveData && liveData.length >= 3) {
+    allGames = liveData;
+    document.getElementById('apiNote').style.borderLeftColor = 'var(--green)';
+    document.getElementById('apiNoteText').textContent =
+      `✓ 即時資料載入成功！共 ${allGames.length} 款台灣 eShop 特價遊戲，資料每小時更新。`;
+    document.getElementById('apiStatusBadge').innerHTML = '<span class="api-status live">LIVE ' + allGames.length + ' 款</span>';
+  } else {
+    allGames = DEMO;
+    document.getElementById('apiNote').style.borderLeftColor = 'var(--gold2)';
+    document.getElementById('apiNoteText').textContent =
+      '示範模式：顯示範例資料。部署到 Vercel 後將自動切換為 Nintendo eShop 即時資料。';
+    document.getElementById('apiStatusBadge').innerHTML = '<span class="api-status demo">DEMO</span>';
+  }
 
-    // ── INIT ─────────────────────────────────────────────────
-    async function init() {
-        document.getElementById('todayDate').textContent = new Date().toLocaleDateString('zh-TW', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            weekday: 'short'
-        });
+  document.getElementById('bannerSaleCount').textContent = allGames.length;
+  document.getElementById('bannerMaxDiscount').textContent = Math.max(...allGames.map(g=>g.discount)) + '%';
+  renderHero();
+  applyFilters();
+}
 
-        let liveData = null;
-        try {
-            const res = await fetch(API_URL, {
-                signal: AbortSignal.timeout(12000)
-            });
-            if (res.ok) {
-                const json = await res.json();
-                if(json?.contents?.length) {
-                    liveData = json.contents.map((g, i) => parseGame(g, i)).filter(Boolean);
-                }
-            }
-        } catch (e) {}
+// ── HERO ─────────────────────────────────────────────────
+function renderHero() {
+  const sorted = [...allGames].sort((a,b)=>b.discount-a.discount);
+  const top = sorted[0], side = sorted.slice(1,4);
+  const grad = GRADIENTS[top.genres[0]] || GRADIENTS.default;
 
-        if (liveData && liveData.length >= 3) {
-            allGames = liveData;
-            document.getElementById('apiNote').style.borderLeftColor = 'var(--green)';
-            document.getElementById('apiNoteText').textContent =
-            `✓ 即時資料載入成功！共 ${allGames.length} 款台灣 eShop 特價遊戲，資料每小時更新。`;
-            document.getElementById('apiStatusBadge').innerHTML = '<span class="api-status live">LIVE ' + allGames.length + ' 款</span>';
-        } else {
-            allGames = DEMO;
-            document.getElementById('apiNote').style.borderLeftColor = 'var(--gold2)';
-            document.getElementById('apiNoteText').textContent =
-            '示範模式：顯示範例資料。部署到 Vercel 後將自動切換為 Nintendo eShop 即時資料。';
-            document.getElementById('apiStatusBadge').innerHTML = '<span class="api-status demo">DEMO</span>';
-        }
-
-        document.getElementById('bannerSaleCount').textContent = allGames.length;
-        document.getElementById('bannerMaxDiscount').textContent = Math.max(...allGames.map(g => g.discount)) + '%';
-        renderHero();
-        applyFilters();
-    }
-
-    // ── HERO ─────────────────────────────────────────────────
-    function renderHero() {
-        const sorted = [...allGames].sort((a, b) => b.discount - a.discount);
-        const top = sorted[0],
-            side = sorted.slice(1, 4);
-        const grad = GRADIENTS[top.genres[0]] || GRADIENTS.default;
-
-        document.getElementById('heroGrid').innerHTML = `
+  document.getElementById('heroGrid').innerHTML = `
     <div class="hero-main" onclick="openModal(${top.id})" style="background:${grad}">
-      ${top.coverUrl ? `<img class="hero-img" src="${top.coverUrl}" alt="${escHtml(top.name)}"
+      ${top.coverUrl
+        ? `<img class="hero-img" src="${top.coverUrl}" alt="${escHtml(top.name)}"
              onerror="this.style.display='none'">`
         : ''}
       <div class="hero-fallback" style="position:absolute;inset:0">
-        <div class="hero-fallback-emoji">${
-        top.emoji}</div>
+        <div class="hero-fallback-emoji">${top.emoji}</div>
         <div class="hero-fallback-name">${top.name}</div>
       </div>
       <div class="hero-overlay">
-        <div class="hero-genre-tag">${
-
-        top.genres.map(g => genreMap[g] || g).join(' · ')}</div>
+        <div class="hero-genre-tag">${top.genres.map(g=>genreMap[g]||g).join(' · ')}</div>
         <div class="hero-title">${top.name}</div>
-        <div class="hero-subtitle">${(top.desc || '').slice(0, 60)}${top.desc && top.desc.length > 60 ? '…' : ''}</div>
+        <div class="hero-subtitle">${(top.desc||'').slice(0,60)}${top.desc&&top.desc.length>60?'…':''}</div>
         <div class="hero-price-row">
-          <span class="hero-sale-price">NT$${
-        top.salePrice}</span>
+          <span class="hero-sale-price">NT$${top.salePrice}</span>
           <span class="hero-orig-price">NT$${top.origPrice}</span>
           <span class="hero-discount">-${top.discount}%</span>
-          ${top.allTimeLow ? '<span class="hero-atl">歷史低價</span>' : ''}
+          ${top.allTimeLow?'<span class="hero-atl">歷史低價</span>':''}
         </div>
       </div>
     </div>
     <div class="hero-side">
-      ${
-
-
-
-        side.map((g, i) => {const sg = GRADIENTS[g.genres[0]] || GRADIENTS.default;return `<div class="hero-side-item" onclick="openModal(${g.id})">
+      ${side.map((g,i)=>{
+        const sg = GRADIENTS[g.genres[0]] || GRADIENTS.default;
+        return `<div class="hero-side-item" onclick="openModal(${g.id})">
           <div class="side-thumb-fallback" style="background:${sg}">${g.emoji}</div>
           ${g.coverUrl ? `<img class="side-thumb" src="${g.coverUrl}" alt="${escHtml(g.name)}"
             style="position:absolute;left:12px" onerror="this.style.display='none'">` : ''}
           <div class="side-info">
-            <div class="side-genre">${
-            genreMap[g.genres[0]] || g.genres[0]}</div>
+            <div class="side-genre">${genreMap[g.genres[0]]||g.genres[0]}</div>
             <div class="side-title">${g.name}</div>
             <span class="side-price">NT$${g.salePrice}</span>
             <span class="side-orig"> NT$${g.origPrice}</span>
           </div>
-        </div>`
-            ;}).join('')}
-    </div>`
-        ;
-    }
+        </div>`;
+      }).join('')}
+    </div>`;
+}
 
-    // ── FILTERS ───────────────────────────────────────────────
-    function applyFilters() {
-        const search = document.getElementById('searchInput').value.toLowerCase();
-        filtered = allGames.filter(g => {
-            const matchGenre = currentGenre === 'all' || g.genres.includes(currentGenre);
-            const matchSearch = !search || g.name.toLowerCase().includes(search);
-            const matchATL = currentSection !== 'atl' || g.allTimeLow;
-            return matchGenre && matchSearch && matchATL;
-        });
-        applySort(currentSort);
-    }
+// ── FILTERS ───────────────────────────────────────────────
+function applyFilters() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  filtered = allGames.filter(g => {
+    const matchGenre = currentGenre==='all' || g.genres.includes(currentGenre);
+    const matchSearch = !search || g.name.toLowerCase().includes(search);
+    const matchATL = currentSection!=='atl' || g.allTimeLow;
+    return matchGenre && matchSearch && matchATL;
+  });
+  applySort(currentSort);
+}
 
-    function applySort(val) {
-        currentSort = val;
-        if (val === 'discount')
-            filtered.sort((a, b) => b.discount - a.discount);
-        else if (val === 'price_asc')
-            filtered.sort((a, b) => a.salePrice - b.salePrice);
-        else if (val === 'price_desc')
-            filtered.sort((a, b) => b.salePrice - a.salePrice);
-        else
-            filtered.sort((a, b) => a.name.localeCompare(b.name));
-        renderCards();
-    }
+function applySort(val) {
+  currentSort = val;
+  if (val==='discount') filtered.sort((a,b)=>b.discount-a.discount);
+  else if (val==='price_asc') filtered.sort((a,b)=>a.salePrice-b.salePrice);
+  else if (val==='price_desc') filtered.sort((a,b)=>b.salePrice-a.salePrice);
+  else filtered.sort((a,b)=>a.name.localeCompare(b.name));
+  renderCards();
+}
 
-    function filterGenre(genre, btn) {
-        currentGenre = genre;
-        document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        applyFilters();
-    }
+function filterGenre(genre, btn) {
+  currentGenre = genre;
+  document.querySelectorAll('.filter-chip').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+}
 
-    function setSection(sec, btn) {
-        currentSection = sec;
-        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const isRogue = sec === 'roguelike';
-        document.getElementById('saleSection').style.display = isRogue ? 'none' : '';
-        document.getElementById('rogueSection').style.display = isRogue ? '' : 'none';
-        document.getElementById('heroSection').style.display = isRogue ? 'none' : '';
-        if (isRogue)
-            renderRogueSection();
-        else
-            applyFilters();
-    }
+function setSection(sec, btn) {
+  currentSection = sec;
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const isRogue = sec==='roguelike';
+  document.getElementById('saleSection').style.display = isRogue?'none':'';
+  document.getElementById('rogueSection').style.display = isRogue?'':'none';
+  document.getElementById('heroSection').style.display = isRogue?'none':'';
+  if (isRogue) renderRogueSection(); else applyFilters();
+}
 
-    // ── RENDER CARDS ──────────────────────────────────────────
-    function renderCards() {
-        const grid = document.getElementById('cardsGrid');
-        document.getElementById('cardCount').textContent = filtered.length + ' 款特價中';
-        if (!filtered.length) {
-            grid.innerHTML = '<div style="grid-column:1/-1;padding:3rem;text-align:center;color:var(--ink4);font-family:var(--mono);font-size:12px">沒有符合條件的遊戲</div>';
-            return;
-        }
-        grid.innerHTML = filtered.map((g, i) => {
-            const isRogue = g.genres.includes('roguelike');
-            const grad = GRADIENTS[g.genres[0]] || GRADIENTS.default;
-            return `
-    <div class="game-card" onclick="openModal(${g.id})" style="animation:fadeIn .3s both;animation-delay:${Math.min(i * .03, .5)}s">
+// ── RENDER CARDS ──────────────────────────────────────────
+function renderCards() {
+  const grid = document.getElementById('cardsGrid');
+  document.getElementById('cardCount').textContent = filtered.length + ' 款特價中';
+  if (!filtered.length) {
+    grid.innerHTML='<div style="grid-column:1/-1;padding:3rem;text-align:center;color:var(--ink4);font-family:var(--mono);font-size:12px">沒有符合條件的遊戲</div>';
+    return;
+  }
+  grid.innerHTML = filtered.map((g,i) => {
+    const isRogue = g.genres.includes('roguelike');
+    const grad = GRADIENTS[g.genres[0]] || GRADIENTS.default;
+    return `
+    <div class="game-card" onclick="openModal(${g.id})" style="animation:fadeIn .3s both;animation-delay:${Math.min(i*.03,.5)}s">
       <div class="card-img-wrap" style="background:${grad}">
         <div class="card-img-fallback">
-          <span class="card-fallback-emoji">${
-            g.emoji}</span>
-          <span class="card-fallback-genre">${genreMap[g.genres[0]] || g.genres[0]}</span>
+          <span class="card-fallback-emoji">${g.emoji}</span>
+          <span class="card-fallback-genre">${genreMap[g.genres[0]]||g.genres[0]}</span>
         </div>
-        ${
-            g.coverUrl ? `<img class="card-img" src="${g.coverUrl}" alt="${escHtml(g.name)}"
+        ${g.coverUrl ? `<img class="card-img" src="${g.coverUrl}" alt="${escHtml(g.name)}"
           onerror="this.style.display='none'">` : ''}
       </div>
-      <div class="card-discount-flag">-${
-            g.discount}%</div>
-      ${g.allTimeLow ? '<div class="card-atl-flag">歷史低價</div>' : ''}
-      ${isRogue ? '<div class="card-rogue-flag">ROGUELIKE</div>' : ''}
-      ${i < 10 ? `<div class="card-rank-num">No.${i + 1}</div>` : ''}
+      <div class="card-discount-flag">-${g.discount}%</div>
+      ${g.allTimeLow?'<div class="card-atl-flag">歷史低價</div>':''}
+      ${isRogue?'<div class="card-rogue-flag">ROGUELIKE</div>':''}
+      ${i<10?`<div class="card-rank-num">No.${i+1}</div>`:''}
       <div class="card-body">
-        <div class="card-category">${
-            g.genres.map(x => genreMap[x] || x).slice(0, 2).join(' · ')}</div>
+        <div class="card-category">${g.genres.map(x=>genreMap[x]||x).slice(0,2).join(' · ')}</div>
         <div class="card-title">${g.name}</div>
         <div class="card-price-line">
-          <span class="card-sale">NT$${
-            g.salePrice}</span>
+          <span class="card-sale">NT$${g.salePrice}</span>
           <span class="card-orig">NT$${g.origPrice}</span>
         </div>
-        <div class="card-expire ${
-            g.expiresIn <= 2 ? 'urgent' : ''}">
-          ${g.expiresIn <= 2 ? '⚠ ' : ''}還剩 ${g.expiresIn} 天
+        <div class="card-expire ${g.expiresIn<=2?'urgent':''}">
+          ${g.expiresIn<=2?'⚠ ':''}還剩 ${g.expiresIn} 天
         </div>
       </div>
-    </div>`
+    </div>`;
+  }).join('');
+}
 
-
-            ;
-        }).join('');
-    }
-
-    // ── ROGUELIKE ─────────────────────────────────────────────
-    function renderRogueSection() {
-        const rogues = allGames.filter(g => g.genres.includes('roguelike')).sort((a, b) => b.discount - a.discount);
-        document.getElementById('rogueCount').textContent = rogues.length + ' 款特價中';
-        document.getElementById('rogueGrid').innerHTML = rogues.map((g, i) => {
-            const grad = GRADIENTS.roguelike;
-            return `<div class="rogue-card" onclick="openModal(${g.id})">
+// ── ROGUELIKE ─────────────────────────────────────────────
+function renderRogueSection() {
+  const rogues = allGames.filter(g=>g.genres.includes('roguelike')).sort((a,b)=>b.discount-a.discount);
+  document.getElementById('rogueCount').textContent = rogues.length+' 款特價中';
+  document.getElementById('rogueGrid').innerHTML = rogues.map((g,i) => {
+    const grad = GRADIENTS.roguelike;
+    return `<div class="rogue-card" onclick="openModal(${g.id})">
       <div class="rogue-card-img-wrap" style="background:${grad}">
         <div class="rogue-card-fallback">${g.emoji}</div>
         ${g.coverUrl ? `<img class="rogue-card-img" src="${g.coverUrl}" alt="${escHtml(g.name)}"
           onerror="this.style.display='none'">` : ''}
       </div>
       <div class="rogue-card-body">
-        <div class="rogue-num">${
-
-            String(i + 1).padStart(2, '0')}</div>
-        <div class="rogue-card-category">Roguelike · No.${i + 1}</div>
+        <div class="rogue-num">${String(i+1).padStart(2,'0')}</div>
+        <div class="rogue-card-category">Roguelike · No.${i+1}</div>
         <div class="rogue-card-title">${g.name}</div>
         <span class="rogue-price">NT$${g.salePrice}</span>
         <span class="rogue-orig"> NT$${g.origPrice}</span>
         &nbsp;<span style="font-family:var(--mono);font-size:11px;color:#e88">-${g.discount}%</span>
       </div>
-    </div>`
+    </div>`;
+  }).join('');
+}
 
-            ;
-        }).join('');
-    }
+// ── MODAL ─────────────────────────────────────────────────
+function openModal(id) {
+  const g = allGames.find(x=>x.id===id); if(!g) return;
+  const grad = GRADIENTS[g.genres[0]] || GRADIENTS.default;
 
-    // ── MODAL ─────────────────────────────────────────────────
-    function openModal(id) {
-        const g = allGames.find(x => x.id === id);
-        if (!g)
-            return;
-        const grad = GRADIENTS[g.genres[0]] || GRADIENTS.default;
+  document.getElementById('modalImgWrap').innerHTML =
+    `<div class="modal-img-fallback" style="background:${grad}"><span style="font-size:6rem">${g.emoji}</span></div>` +
+    (g.coverUrl ? `<img class="modal-img" src="${g.coverUrl}" alt="${escHtml(g.name)}"
+      onerror="this.style.display='none'">` : '');
 
-        document.getElementById('modalImgWrap').innerHTML =
-        `<div class="modal-img-fallback" style="background:${grad}"><span style="font-size:6rem">${g.emoji}</span></div>` +
-        (g.coverUrl ? `<img class="modal-img" src="${g.coverUrl}" alt="${escHtml(g.name)}"
-      onerror="this.style.display='none'">`
-        : '');
+  document.getElementById('modalKicker').textContent = g.genres.map(x=>(genreMap[x]||x).toUpperCase()).join(' · ');
+  document.getElementById('modalTitle').textContent = g.name;
+  document.getElementById('modalSalePrice').textContent = `NT$${g.salePrice}`;
+  document.getElementById('modalOrigPrice').textContent = `原價 NT$${g.origPrice}`;
+  document.getElementById('modalSave').textContent = `省下 NT$${g.origPrice-g.salePrice}`;
+  document.getElementById('modalDiscount').textContent = `-${g.discount}%`;
+  document.getElementById('modalDesc').textContent = g.desc || '（無遊戲描述）';
 
-        document.getElementById('modalKicker').textContent = g.genres.map(x => (genreMap[x] || x).toUpperCase()).join(' · ');
-        document.getElementById('modalTitle').textContent = g.name;
-        document.getElementById('modalSalePrice').textContent = `NT$${g.salePrice}`;
-        document.getElementById('modalOrigPrice').textContent = `原價 NT$${g.origPrice}`;
-        document.getElementById('modalSave').textContent = `省下 NT$${g.origPrice - g.salePrice}`;
-        document.getElementById('modalDiscount').textContent = `-${g.discount}%`;
-        document.getElementById('modalDesc').textContent = g.desc || '（無遊戲描述）';
+  const exp = document.getElementById('modalExpire');
+  exp.className = 'expire-strip'+(g.expiresIn<=2?' urgent':'');
+  exp.innerHTML = `${g.expiresIn<=2?'⚠ 即將結束：':'⏱ 特賣截止：'}還剩 <strong>${g.expiresIn} 天</strong>`;
 
-        const exp = document.getElementById('modalExpire');
-        exp.className = 'expire-strip' + (g.expiresIn <= 2 ? ' urgent' : '');
-        exp.innerHTML = `${g.expiresIn <= 2 ? '⚠ 即將結束：' : '⏱ 特賣截止：'}還剩 <strong>${g.expiresIn} 天</strong>`;
+  let tags = g.genres.map(x=>`<span class="modal-tag ${x==='roguelike'?'rogue':''}">${genreMap[x]||x}</span>`).join('');
+  if(g.allTimeLow) tags+='<span class="modal-tag atl">歷史低價</span>';
+  document.getElementById('modalTags').innerHTML = tags;
+  document.getElementById('modalEshopBtn').href =
+    g.eshopLink || g.nsuid ? `https://ec.nintendo.com/TW/zh/titles/${g.nsuid}` : 'https://ec.nintendo.com/TW/zh/';
 
-        let tags = g.genres.map(x => `<span class="modal-tag ${x === 'roguelike' ? 'rogue' : ''}">${genreMap[x] || x}</span>`).join('');
-        if (g.allTimeLow)
-            tags += '<span class="modal-tag atl">歷史低價</span>';
-        document.getElementById('modalTags').innerHTML = tags;
-        // 優先用 API 回傳的連結，否則用台灣 eShop
-        document.getElementById('modalEshopBtn').href =
-        g.eshopLink || (g.nsuid ? `https://ec.nintendo.com/TW/zh/titles/${g.nsuid}` : 'https://ec.nintendo.com/TW/zh/');
+  const maxP = g.ph.length ? Math.max(...g.ph.map(h=>h.p)) : g.origPrice;
+  document.getElementById('priceHistoryEl').innerHTML = g.ph.length
+    ? g.ph.map(h => {
+        const pct=(h.p/maxP*100).toFixed(0);
+        const isCur=h.p===g.salePrice;
+        const isLow=h.p===Math.min(...g.ph.map(x=>x.p));
+        return `<div class="ph-row"><span class="ph-mo">${h.m}</span>
+          <div class="ph-bar-bg"><div class="ph-bar-fill ${isCur?'current':isLow?'low':''}" style="width:${pct}%"></div></div>
+          <span class="ph-val ${isCur?'current':''}">NT$${h.p}</span></div>`;
+      }).join('')
+    : '<p style="color:var(--ink4);font-family:var(--mono);font-size:11px">即時 API 模式下暫無歷史記錄</p>';
 
-        const maxP = g.ph.length ? Math.max(...g.ph.map(h => h.p)) : g.origPrice;
-        document.getElementById('priceHistoryEl').innerHTML = g.ph.length
-        ? g.ph.map(h => {
-            const pct = (h.p / maxP * 100).toFixed(0);
-            const isCur = h.p === g.salePrice;
-            const isLow = h.p === Math.min(...g.ph.map(x => x.p));
-            return `<div class="ph-row"><span class="ph-mo">${h.m}</span>
-          <div class="ph-bar-bg"><div class="ph-bar-fill ${isCur ? 'current' : isLow ? 'low' : ''}" style="width:${pct}%"></div></div>
-          <span class="ph-val ${isCur ? 'current' : ''}">NT$${h.p}</span></div>`;
-        }).join('')
-        : '<p style="color:var(--ink4);font-family:var(--mono);font-size:11px">即時 API 模式下暫無歷史記錄</p>';
+  // 截圖（Nintendo API 提供 screenshots 欄位，即時模式會有）
+  const shots = g.screenshots || [];
+  document.getElementById('modalScreenshots').innerHTML = shots.length
+    ? shots.slice(0,6).map(s => `<img class="screenshot-img" src="${s.url||s}" alt="截圖" loading="lazy">`).join('')
+    : ['','',''].map(()=>`<div class="screenshot-ph">${g.emoji}</div>`).join('');
 
-        // 截圖（Nintendo API 提供 screenshots 欄位，即時模式會有）
-        const shots = g.screenshots || [];
-        document.getElementById('modalScreenshots').innerHTML = shots.length
-        ? shots.slice(0, 6).map(s => `<img class="screenshot-img" src="${s.url || s}" alt="截圖" loading="lazy">`).join('')
-        : ['', '', ''].map(() => `<div class="screenshot-ph">${g.emoji}</div>`).join('');
+  document.querySelectorAll('.mtab').forEach((t,i)=>t.classList.toggle('active',i===0));
+  document.querySelectorAll('.tab-panel').forEach((p,i)=>p.classList.toggle('active',i===0));
+  document.getElementById('modalWrap').classList.add('open');
+  document.body.style.overflow='hidden';
+}
 
-        document.querySelectorAll('.mtab').forEach((t, i) => t.classList.toggle('active', i === 0));
-        document.querySelectorAll('.tab-panel').forEach((p, i) => p.classList.toggle('active', i === 0));
-        document.getElementById('modalWrap').classList.add('open');
-        document.body.style.overflow = 'hidden';
-    }
+function closeModal() {
+  document.getElementById('modalWrap').classList.remove('open');
+  document.body.style.overflow='';
+}
+function closeModalOutside(e) { if(e.target===document.getElementById('modalWrap')) closeModal(); }
+function switchTab(tab,btn) {
+  document.querySelectorAll('.mtab').forEach(t=>t.classList.remove('active')); btn.classList.add('active');
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+}
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
 
-    function closeModal() {
-        document.getElementById('modalWrap').classList.remove('open');
-        document.body.style.overflow = '';
-    }
-    function closeModalOutside(e) {
-        if (e.target === document.getElementById('modalWrap'))
-            closeModal();
-    }
-    function switchTab(tab, btn) {
-        document.querySelectorAll('.mtab').forEach(t => t.classList.remove('active'));
-        btn.classList.add('active');
-        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-        document.getElementById('tab-' + tab).classList.add('active');
-    }
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape')
-            closeModal();
-    });
-
-    init();
-    </script>
+init();
+</script>
 </body>
 </html>

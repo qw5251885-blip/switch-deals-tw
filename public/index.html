@@ -1917,6 +1917,8 @@
         return {
             id: index + 1,
             nsuid: String(raw.id || ''),
+            eshopLink: raw._eshopLink || null,
+            country: raw._country || 'HK',
             name,
             genres,
             emoji: '🎮',
@@ -2201,8 +2203,9 @@
         if (g.allTimeLow)
             tags += '<span class="modal-tag atl">歷史低價</span>';
         document.getElementById('modalTags').innerHTML = tags;
+        // 優先用 API 回傳的連結，否則用台灣 eShop
         document.getElementById('modalEshopBtn').href =
-        g.nsuid ? `https://ec.nintendo.com/HK/zh/titles/${g.nsuid}` : 'https://www.nintendo.com.hk/eshop/';
+        g.eshopLink || (g.nsuid ? `https://ec.nintendo.com/TW/zh/titles/${g.nsuid}` : 'https://ec.nintendo.com/TW/zh/');
 
         const maxP = g.ph.length ? Math.max(...g.ph.map(h => h.p)) : g.origPrice;
         document.getElementById('priceHistoryEl').innerHTML = g.ph.length

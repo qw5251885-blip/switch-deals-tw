@@ -1,4 +1,4 @@
-// api/sales.js — HK 為主 + TW 補充，全量抓特價
+// api/sales.js — 抓所有遊戲 + 標示特價 + 用 eshop-prices 圖片
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -6,8 +6,8 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   try {
-    // Step 1: HK 遊戲列表（含圖片 nsuid）
-    console.log('[S1] 抓 HK JSON...');
+    // Step 1: HK 完整遊戲列表
+    console.log('[S1] 抓 HK 遊戲列表...');
     const r = await fetch('https://www.nintendo.com.hk/data/json/switch_software.json', {
       headers: { 'User-Agent': 'Mozilla/5.0', 'Referer': 'https://www.nintendo.com.hk/' },
       signal: AbortSignal.timeout(12000),
@@ -15,7 +15,7 @@ export default async function handler(req, res) {
     if (!r.ok) throw new Error(`HK JSON ${r.status}`);
     const rawList = await r.json();
 
-    // 建立 nsuid 對照表，從 thumb_img 欄位取得 nsuid
+    // 從 thumb_img 取 nsuid，建立遊戲表（去除重複）
     const gameMap = {};
     for (const g of rawList) {
       if (!g.thumb_img) continue;
@@ -25,7 +25,8 @@ export default async function handler(req, res) {
         gameMap[nsuid] = {
           nsuid,
           name: g.title || '',
-          ext: g.thumb_img.split('.').pop() || 'jpeg',
+          // eshop-prices.com 提供穩定的遊戲封面圖
+          imgUrl: `https://images.eshop-prices.com/games/${nsuid}/50w.jpeg`,
           hkLink: g.link?.startsWith('http') ? g.link : `https://store.nintendo.com.hk/${nsuid}`,
         };
       }
@@ -33,79 +34,92 @@ export default async function handler(req, res) {
     const nsuids = Object.keys(gameMap);
     console.log(`[S1] ${nsuids.length} 款遊戲`);
 
-    // Step 2: 同時查 HK + TW，HK 為主（遊戲多），TW 補自己特有的特價
-    console.log('[S2] 查 HK + TW 特價...');
-    const [hkR, twR] = await Promise.allSettled([
-      queryPrice('HK', nsuids, gameMap),
-      queryPrice('TW', nsuids, gameMap),
-    ]);
-    const hkSales = hkR.status === 'fulfilled' ? hkR.value : [];
-    const twSales = twR.status === 'fulfilled' ? twR.value : [];
-    console.log(`[S2] HK:${hkSales.length} TW:${twSales.length}`);
+    // Step 2: 同時查 HK + TW 的所有價格（不限特價）
+    console.log('[S2] 查詢所有遊戲價格...');
+    const allGames = [];
+    const BATCH = 50;
 
-    // HK 為主，TW 有比 HK 便宜的同款遊戲就換成 TW 價格
-    const hkMap = {};
-    for (const g of hkSales) hkMap[g.id] = g;
+    // 先查 TW，再查 HK 補充
+    for (const country of ['TW', 'HK']) {
+      for (let i = 0; i < nsuids.length; i += BATCH) {
+        const batch = nsuids.slice(i, i + BATCH);
+        try {
+          const pr = await fetch(
+            `https://api.ec.nintendo.com/v1/price?country=${country}&ids=${batch.join(',')}&lang=zh`,
+            { headers: { 'User-Agent': 'Mozilla/5.0' }, signal: AbortSignal.timeout(8000) }
+          );
+          if (!pr.ok) continue;
+          const pd = await pr.json();
 
-    for (const tw of twSales) {
-      if (!hkMap[tw.id]) {
-        // TW 獨有的特價，直接加入
-        hkSales.push(tw);
-      } else if (tw._salePrice < hkMap[tw.id]._salePrice) {
-        // TW 比 HK 便宜，換成 TW 的資料
-        const idx = hkSales.findIndex(g => g.id === tw.id);
-        if (idx >= 0) hkSales[idx] = tw;
+          for (const p of pd.prices || []) {
+            const nsuid = String(p.title_id);
+            const game = gameMap[nsuid];
+            if (!game) continue;
+            if (p.sales_status === 'not_found') continue;
+
+            const origAmt = parseFloat(p.regular_price?.raw_value || 0);
+            if (origAmt <= 0) continue;
+
+            const isOnSale = p.sales_status === 'onsale' && p.discount_price;
+            const saleAmt = isOnSale ? parseFloat(p.discount_price.raw_value || 0) : origAmt;
+            const discount = isOnSale ? Math.round((1 - saleAmt / origAmt) * 100) : 0;
+            const end = p.discount_price?.end_datetime;
+
+            // 只加一次（TW 優先）
+            const existing = allGames.find(g => g.id === nsuid);
+            if (existing) {
+              // 如果 TW 有特價但 HK 沒有，更新
+              if (country === 'TW' && isOnSale && !existing.onSale) {
+                existing.onSale = true;
+                existing.salePrice = saleAmt;
+                existing.discount = discount;
+                existing.country = 'TW';
+                existing.eshopLink = `https://ec.nintendo.com/TW/zh/titles/${nsuid}`;
+              }
+              continue;
+            }
+
+            allGames.push({
+              id: nsuid,
+              formal_name: game.name,
+              hero_banner_url: game.imgUrl,
+              description: '',
+              genre: '',
+              onSale: isOnSale,
+              _discount: discount,
+              _salePrice: saleAmt,
+              _origPrice: origAmt,
+              _expiresIn: end ? Math.max(1, Math.ceil((new Date(end) - Date.now()) / 86400000)) : 0,
+              _country: country,
+              _eshopLink: country === 'TW'
+                ? `https://ec.nintendo.com/TW/zh/titles/${nsuid}`
+                : game.hkLink,
+              price: { regular_price: p.regular_price, discount_price: p.discount_price || null },
+            });
+          }
+        } catch (e) { /* 繼續 */ }
       }
     }
 
-    hkSales.sort((a, b) => b._discount - a._discount);
-    console.log(`[S2] 合併後 ${hkSales.length} 款`);
-    return res.status(200).json({ contents: hkSales, total: hkSales.length, source: `HK:${hkSales.length}` });
+    // 特價的排前面，其餘按名稱
+    allGames.sort((a, b) => {
+      if (a.onSale && !b.onSale) return -1;
+      if (!a.onSale && b.onSale) return 1;
+      return b._discount - a._discount;
+    });
+
+    const onSaleCount = allGames.filter(g => g.onSale).length;
+    console.log(`[S2] 共 ${allGames.length} 款，其中 ${onSaleCount} 款特價`);
+
+    return res.status(200).json({
+      contents: allGames,
+      total: allGames.length,
+      onSaleCount,
+      source: 'all-games',
+    });
 
   } catch (err) {
     console.error('[sales]', err.message);
     return res.status(200).json({ contents: [], total: 0, error: err.message });
   }
-}
-
-async function queryPrice(country, nsuids, gameMap) {
-  const onSale = [];
-  for (let i = 0; i < nsuids.length; i += 50) {
-    const batch = nsuids.slice(i, i + 50);
-    try {
-      const res = await fetch(
-        `https://api.ec.nintendo.com/v1/price?country=${country}&ids=${batch.join(',')}&lang=zh`,
-        { headers: { 'User-Agent': 'Mozilla/5.0' }, signal: AbortSignal.timeout(8000) }
-      );
-      if (!res.ok) continue;
-      const data = await res.json();
-      for (const p of data.prices || []) {
-        if (p.sales_status !== 'onsale' || !p.discount_price) continue;
-        const nsuid = String(p.title_id);
-        const game = gameMap[nsuid];
-        if (!game) continue;
-        const sale = parseFloat(p.discount_price.raw_value || 0);
-        const orig = parseFloat(p.regular_price?.raw_value || 0);
-        if (sale <= 0 || orig <= 0) continue;
-        const disc = Math.round((1 - sale / orig) * 100);
-        if (disc <= 0) continue;
-        const end = p.discount_price.end_datetime;
-        onSale.push({
-          id: nsuid,
-          formal_name: game.name,
-          // 圖片透過 /api/img proxy 送出，繞過 hotlink 保護
-          hero_banner_url: `/api/img?id=${nsuid}&ext=${game.ext}`,
-          description: '', genre: '',
-          _discount: disc, _salePrice: sale, _origPrice: orig,
-          _expiresIn: end ? Math.max(1, Math.ceil((new Date(end) - Date.now()) / 86400000)) : 7,
-          _country: country,
-          _eshopLink: country === 'TW'
-            ? `https://ec.nintendo.com/TW/zh/titles/${nsuid}`
-            : game.hkLink,
-          price: { regular_price: p.regular_price, discount_price: p.discount_price },
-        });
-      }
-    } catch (e) { /* 繼續下一批 */ }
-  }
-  return onSale.sort((a, b) => b._discount - a._discount);
 }

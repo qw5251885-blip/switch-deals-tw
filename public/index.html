@@ -269,7 +269,7 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);font-size:
 
   <section id="saleSection">
     <div class="section-head">
-      <div class="section-head-title">折扣排行榜</div>
+      <div class="section-head-title" id="sectionTitle">折扣排行榜</div>
       <div class="section-head-line"></div>
       <div class="section-head-count" id="cardCount">— 款特價中</div>
     </div>
@@ -409,60 +409,37 @@ let currentGenre='all', currentSort='discount', currentSection='sale';
 
 // ── 解析 Nintendo API 資料 ────────────────────────────────
 function parseGame(raw, index) {
-  // 支援兩種格式：
-  // 格式A: 舊的 sales API 直接回傳 price 物件
-  // 格式B: 新的 price API，預先處理好 _discount/_salePrice/_origPrice/_expiresIn
+  const salePrice = raw._salePrice || 0;
+  const origPrice = raw._origPrice || 0;
+  const discount  = raw._discount  || 0;
+  const expiresIn = raw._expiresIn || 0;
+  const onSale    = raw.onSale || false;
 
-  let salePrice, origPrice, discount, expiresIn;
-
-  if (raw._discount !== undefined) {
-    // 格式B（新版 price API）
-    salePrice = raw._salePrice;
-    origPrice = raw._origPrice;
-    discount  = raw._discount;
-    expiresIn = raw._expiresIn || 7;
-  } else {
-    // 格式A（舊版 sales API）
-    const price = raw.price || {};
-    const dp = price.discount_price || {};
-    const rp = price.regular_price || {};
-    salePrice = parseFloat(dp.raw_value || dp.amount || 0);
-    origPrice = parseFloat(rp.raw_value || rp.amount || 0);
-    discount  = dp.discount_rate
-      ? parseInt(dp.discount_rate)
-      : (origPrice > 0 ? Math.round((1 - salePrice / origPrice) * 100) : 0);
-    const endDt = dp.end_datetime;
-    expiresIn = endDt
-      ? Math.max(1, Math.ceil((new Date(endDt) - Date.now()) / 86400000))
-      : 7;
-  }
-
-  if (salePrice <= 0 || origPrice <= 0 || discount <= 0) return null;
-
+  // 允許沒有特價的遊戲（全庫瀏覽模式）
+  if (origPrice <= 0) return null;
   const name = raw.formal_name || raw.title || '';
   if (!name) return null;
 
   const nameLC = name.toLowerCase();
-  const descLC = (raw.description || raw.catch_copy || '').toLowerCase();
-  const combined = nameLC + ' ' + descLC;
+  const combined = nameLC + ' ' + (raw.description || '').toLowerCase();
   const isRogue = ROGUE_KEYS.some(k => combined.includes(k));
 
   const rawGenre = (raw.genre || raw.category || '').toLowerCase().replace(/ & /g,'_').replace(/ /g,'_');
   const genres = rawGenre ? [rawGenre] : ['action'];
   if (isRogue && !genres.includes('roguelike')) genres.unshift('roguelike');
 
-  // 圖片
-  const coverUrl = raw.hero_banner_url || raw.banner_url || raw.image_url || null;
+  const coverUrl = raw.hero_banner_url || null;
 
   return {
     id: index + 1,
     nsuid: String(raw.id || ''),
     eshopLink: raw._eshopLink || null,
     country: raw._country || '',
+    onSale,
     name,
     genres,
     emoji: '🎮',
-    salePrice: Math.round(salePrice),
+    salePrice: onSale ? Math.round(salePrice) : Math.round(origPrice),
     origPrice: Math.round(origPrice),
     discount,
     expiresIn,
@@ -519,8 +496,10 @@ async function init() {
     document.getElementById('apiStatusBadge').innerHTML = '<span class="api-status demo">DEMO</span>';
   }
 
-  document.getElementById('bannerSaleCount').textContent = allGames.length;
-  document.getElementById('bannerMaxDiscount').textContent = Math.max(...allGames.map(g=>g.discount)) + '%';
+  const _onSaleCount = json.onSaleCount || allGames.filter(g=>g.onSale).length;
+    document.getElementById('bannerSaleCount').textContent = _onSaleCount;
+  const _salesOnly = allGames.filter(g=>g.onSale);
+  document.getElementById('bannerMaxDiscount').textContent = _salesOnly.length ? Math.max(..._salesOnly.map(g=>g.discount)) + '%' : '—';
   renderHero();
   applyFilters();
 }
@@ -578,7 +557,8 @@ function applyFilters() {
     const matchGenre = currentGenre==='all' || g.genres.includes(currentGenre);
     const matchSearch = !search || g.name.toLowerCase().includes(search);
     const matchATL = currentSection!=='atl' || g.allTimeLow;
-    return matchGenre && matchSearch && matchATL;
+    const matchSale = currentSection!=='sale' || g.onSale;
+    return matchGenre && matchSearch && matchATL && matchSale;
   });
   applySort(currentSort);
 }
@@ -607,13 +587,16 @@ function setSection(sec, btn) {
   document.getElementById('saleSection').style.display = isRogue?'none':'';
   document.getElementById('rogueSection').style.display = isRogue?'':'none';
   document.getElementById('heroSection').style.display = isRogue?'none':'';
+  const titleEl = document.getElementById('sectionTitle');
+  if (titleEl) titleEl.textContent = sec==='all' ? '所有遊戲' : sec==='atl' ? '歷史低價' : '折扣排行榜';
   if (isRogue) renderRogueSection(); else applyFilters();
 }
 
 // ── RENDER CARDS ──────────────────────────────────────────
 function renderCards() {
   const grid = document.getElementById('cardsGrid');
-  document.getElementById('cardCount').textContent = filtered.length + ' 款特價中';
+  const _saleFiltered = filtered.filter(g=>g.onSale).length;
+  document.getElementById('cardCount').textContent = currentSection==='sale' ? filtered.length + ' 款特價中' : filtered.length + ' 款遊戲（' + _saleFiltered + ' 款特價）';
   if (!filtered.length) {
     grid.innerHTML='<div style="grid-column:1/-1;padding:3rem;text-align:center;color:var(--ink4);font-family:var(--mono);font-size:12px">沒有符合條件的遊戲</div>';
     return;
@@ -631,7 +614,7 @@ function renderCards() {
         ${g.coverUrl ? `<img class="card-img" src="${g.coverUrl}" alt="${escHtml(g.name)}"
           onerror="this.style.display='none'">` : ''}
       </div>
-      <div class="card-discount-flag">-${g.discount}%</div>
+      ${g.onSale ? `<div class="card-discount-flag">-${g.discount}%</div>` : ''}
       ${g.allTimeLow?'<div class="card-atl-flag">歷史低價</div>':''}
       ${isRogue?'<div class="card-rogue-flag">ROGUELIKE</div>':''}
       ${i<10?`<div class="card-rank-num">No.${i+1}</div>`:''}
@@ -639,11 +622,12 @@ function renderCards() {
         <div class="card-category">${g.genres.map(x=>genreMap[x]||x).slice(0,2).join(' · ')}</div>
         <div class="card-title">${g.name}</div>
         <div class="card-price-line">
-          <span class="card-sale">NT$${g.salePrice}</span>
-          <span class="card-orig">NT$${g.origPrice}</span>
+          ${g.onSale
+            ? `<span class="card-sale">NT$${g.salePrice}</span><span class="card-orig">NT$${g.origPrice}</span>`
+            : `<span class="card-sale" style="color:var(--ink2)">NT$${g.origPrice}</span>`}
         </div>
-        <div class="card-expire ${g.expiresIn<=2?'urgent':''}">
-          ${g.expiresIn<=2?'⚠ ':''}還剩 ${g.expiresIn} 天
+        <div class="card-expire ${g.onSale && g.expiresIn<=2?'urgent':''}">
+          ${g.onSale ? (g.expiresIn<=2?'⚠ 快結束 ':'特價 ') + g.expiresIn + ' 天' : ''}
         </div>
       </div>
     </div>`;

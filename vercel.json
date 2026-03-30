@@ -1,5 +1,6 @@
 {
-  "rewrites": [
-    { "source": "/api/:path*", "destination": "/api/:path*" }
-  ]
+  "functions": {
+    "api/sales.js": { "maxDuration": 30 },
+    "api/img.js": { "maxDuration": 10 }
+  }
 }

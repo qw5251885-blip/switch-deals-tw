@@ -1,0 +1,9 @@
+{
+  "name": "switch-deals-tw",
+  "version": "1.0.0",
+  "description": "台灣 Nintendo Switch eShop 特價追蹤網站",
+  "private": true,
+  "engines": {
+    "node": "20.x"
+  }
+}

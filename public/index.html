@@ -412,11 +412,9 @@ function parseGame(raw, index) {
   const salePrice = raw._salePrice || 0;
   const origPrice = raw._origPrice || 0;
   const discount  = raw._discount  || 0;
-  const expiresIn = raw._expiresIn || 0;
-  const onSale    = raw.onSale || false;
+  const expiresIn = raw._expiresIn || 7;
 
-  // 允許沒有特價的遊戲（全庫瀏覽模式）
-  if (origPrice <= 0) return null;
+  if (salePrice <= 0 || origPrice <= 0 || discount <= 0) return null;
   const name = raw.formal_name || raw.title || '';
   if (!name) return null;
 
@@ -435,11 +433,10 @@ function parseGame(raw, index) {
     nsuid: String(raw.id || ''),
     eshopLink: raw._eshopLink || null,
     country: raw._country || '',
-    onSale,
     name,
     genres,
     emoji: '🎮',
-    salePrice: onSale ? Math.round(salePrice) : Math.round(origPrice),
+    salePrice: Math.round(salePrice),
     origPrice: Math.round(origPrice),
     discount,
     expiresIn,
@@ -498,8 +495,7 @@ async function init() {
 
   const _onSaleCount = json.onSaleCount || allGames.filter(g=>g.onSale).length;
     document.getElementById('bannerSaleCount').textContent = _onSaleCount;
-  const _salesOnly = allGames.filter(g=>g.onSale);
-  document.getElementById('bannerMaxDiscount').textContent = _salesOnly.length ? Math.max(..._salesOnly.map(g=>g.discount)) + '%' : '—';
+  document.getElementById('bannerMaxDiscount').textContent = Math.max(...allGames.map(g=>g.discount)) + '%';
   renderHero();
   applyFilters();
 }
@@ -557,8 +553,7 @@ function applyFilters() {
     const matchGenre = currentGenre==='all' || g.genres.includes(currentGenre);
     const matchSearch = !search || g.name.toLowerCase().includes(search);
     const matchATL = currentSection!=='atl' || g.allTimeLow;
-    const matchSale = currentSection!=='sale' || g.onSale;
-    return matchGenre && matchSearch && matchATL && matchSale;
+    return matchGenre && matchSearch && matchATL;
   });
   applySort(currentSort);
 }
@@ -595,8 +590,7 @@ function setSection(sec, btn) {
 // ── RENDER CARDS ──────────────────────────────────────────
 function renderCards() {
   const grid = document.getElementById('cardsGrid');
-  const _saleFiltered = filtered.filter(g=>g.onSale).length;
-  document.getElementById('cardCount').textContent = currentSection==='sale' ? filtered.length + ' 款特價中' : filtered.length + ' 款遊戲（' + _saleFiltered + ' 款特價）';
+  document.getElementById('cardCount').textContent = filtered.length + ' 款特價中';
   if (!filtered.length) {
     grid.innerHTML='<div style="grid-column:1/-1;padding:3rem;text-align:center;color:var(--ink4);font-family:var(--mono);font-size:12px">沒有符合條件的遊戲</div>';
     return;
@@ -614,7 +608,7 @@ function renderCards() {
         ${g.coverUrl ? `<img class="card-img" src="${g.coverUrl}" alt="${escHtml(g.name)}"
           onerror="this.style.display='none'">` : ''}
       </div>
-      ${g.onSale ? `<div class="card-discount-flag">-${g.discount}%</div>` : ''}
+      <div class="card-discount-flag">-${g.discount}%</div>
       ${g.allTimeLow?'<div class="card-atl-flag">歷史低價</div>':''}
       ${isRogue?'<div class="card-rogue-flag">ROGUELIKE</div>':''}
       ${i<10?`<div class="card-rank-num">No.${i+1}</div>`:''}
@@ -622,12 +616,11 @@ function renderCards() {
         <div class="card-category">${g.genres.map(x=>genreMap[x]||x).slice(0,2).join(' · ')}</div>
         <div class="card-title">${g.name}</div>
         <div class="card-price-line">
-          ${g.onSale
-            ? `<span class="card-sale">NT$${g.salePrice}</span><span class="card-orig">NT$${g.origPrice}</span>`
-            : `<span class="card-sale" style="color:var(--ink2)">NT$${g.origPrice}</span>`}
+          <span class="card-sale">NT$${g.salePrice}</span>
+          <span class="card-orig">NT$${g.origPrice}</span>
         </div>
-        <div class="card-expire ${g.onSale && g.expiresIn<=2?'urgent':''}">
-          ${g.onSale ? (g.expiresIn<=2?'⚠ 快結束 ':'特價 ') + g.expiresIn + ' 天' : ''}
+        <div class="card-expire ${g.expiresIn<=2?'urgent':''}">
+          ${g.expiresIn<=2?'⚠ ':''}還剩 ${g.expiresIn} 天
         </div>
       </div>
     </div>`;
